@@ -1,0 +1,144 @@
+package com.example.doilikeithere;
+
+import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.doilikeithere.databinding.FragmentSelectionBinding;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class SelectionFragment extends Fragment {
+
+    private FragmentSelectionBinding binding;
+
+    protected ArrayList<String> recyclerViewItems = new ArrayList<>();
+    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
+
+    protected RecyclerView recyclerView;
+    protected RecyclerView.LayoutManager layoutManager;
+    protected RecyclerAdapter recyclerAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Device back button click.
+        // Doesn't do anything at the moment.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button even
+                Log.d("BACKBUTTON", "Back button clicks");
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
+        // Clear selections made by RecyclerAdapter.
+        DataManager.selected.clear();
+
+        //Create test data
+        for(int i = 0; i < 5; i++) {
+            try {
+                DataManager.addNewItem(getContext(), "Positives", "Store", 2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Get items for Recyclerview
+        try {
+            getRecyclerViewData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentSelectionBinding.inflate(inflater, container, false);
+        binding.getRoot();
+
+        // Get RecyclerView
+        recyclerView = (RecyclerView) binding.getRoot().findViewById(R.id.recyclerView);
+
+        // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
+        layoutManager = new LinearLayoutManager(getActivity());
+
+        setRecyclerViewLayoutManager();
+
+        recyclerAdapter = new RecyclerAdapter(recyclerViewItems);
+        // Set RecyclerAdapter as the adapter for RecyclerView.
+        recyclerView.setAdapter(recyclerAdapter);
+
+        return binding.getRoot();
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Save selections to a temporary array and go back to the previous page.
+        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Clear temp Array.
+                // CLEAR TEMP ARRAY BY NAME: HARD CODED FOR TESTING.
+                // For example, pass arrayName (Positives) and clear temp folder according to
+                // that selection.
+                DataManager.clearTemps("tempPositives");
+
+                // Save selections to temp array list.
+                // MAKE SAVING DYNAMIC ACCORDING TO THE TYPE OF PAGE BEING DISPLAYED:
+                // I.E. POSITIVE, NEGATIVE, or FEELINGS.
+                for(String s: DataManager.selected) {
+                    DataManager.tempPositives.add(s);
+                }
+
+                NavHostFragment.findNavController(SelectionFragment.this)
+                        .navigate(R.id.action_selectionFragment_to_SecondFragment);
+            }
+        });
+    }
+
+    private void setRecyclerViewLayoutManager() {
+        int scrollPosition = 0;
+
+        if (recyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.scrollToPosition(scrollPosition);
+    }
+
+    private void getRecyclerViewData() throws IOException, JSONException {
+        // Get data for recyclerview.
+        // Make arrayName selection DYNAMIC later. Currently returns only items labeled as positive.
+        recyclerViewItems = DataManager.loadRecyclerviewItems(getContext(), "Positives");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+}
