@@ -3,33 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/MainPageFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.doilikeithere.FirstFragment"
+        android:id="@+id/MainPageFragment"
+        android:name="com.example.doilikeithere.MainPageFragment"
         android:label="@string/fragment_title_main_page"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_main_page">
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_MainPageFragment_to_ReviewFragment"
             app:destination="@id/SecondFragment" />
         <action
-            android:id="@+id/action_FirstFragment_to_historyFragment"
+            android:id="@+id/action_MainPageFragment_to_HistoryFragment"
             app:destination="@id/historyFragment" />
         <action
-            android:id="@+id/action_FirstFragment_to_settingsFragment"
+            android:id="@+id/action_MainPageFragment_to_SettingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.doilikeithere.SecondFragment"
+        android:name="com.example.doilikeithere.ReviewFragment"
         android:label="@string/fragment_title_review_place"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_review">
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_ReviewFragment_to_MainPageFragment"
+            app:destination="@id/MainPageFragment"
+            app:popUpTo="@+id/MainPageFragment"
+            app:popUpToInclusive="true"/>
         <action
-            android:id="@+id/action_SecondFragment_to_selectionFragment"
+            android:id="@+id/action_ReviewFragment_to_SelectionFragment"
             app:destination="@id/SelectionFragment" />
     </fragment>
     <fragment
@@ -38,7 +40,7 @@
         android:label="@string/fragment_title_make_selections"
         tools:layout="@layout/fragment_selection">
         <action
-            android:id="@+id/action_selectionFragment_to_SecondFragment"
+            android:id="@+id/action_SelectionFragment_to_ReviewFragment"
             app:destination="@id/SecondFragment"
             app:popUpTo="@+id/SecondFragment"
             app:popUpToInclusive="true"/>
@@ -49,9 +51,9 @@
         android:label="History"
         tools:layout="@layout/fragment_history">
         <action
-            android:id="@+id/action_historyFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment"
-            app:popUpTo="@+id/FirstFragment"
+            android:id="@+id/action_HistoryFragment_to_MainPageFragment"
+            app:destination="@id/MainPageFragment"
+            app:popUpTo="@+id/MainPageFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -60,9 +62,9 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings" >
         <action
-            android:id="@+id/action_settingsFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment"
-            app:popUpTo="@+id/FirstFragment"
+            android:id="@+id/action_SettingsFragment_to_MainPageFragment"
+            app:destination="@id/MainPageFragment"
+            app:popUpTo="@+id/MainPageFragment"
             app:popUpToInclusive="true"/>
     </fragment>
 

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecyclerAdapter.ViewHolder> {
     private static final String TAG = "RecyclerAdapter";
     private ArrayList<String> recyclerViewItems;
     private int selectedPos = RecyclerView.NO_POSITION;
@@ -27,7 +27,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     //Log.d(TAG, "Element " + getBindingAdapterPosition() + " clicked.");
-                    textView = v.findViewById(R.id.textView);
+                    textView = v.findViewById(R.id.tx);
                     if (textView.getCurrentTextColor() == Color.RED) {
                         textView.setTextColor(Color.BLACK);
                         // Save selection to DataManager selected ArrayList
@@ -45,7 +45,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     }
                 }
             });
-            textView = v.findViewById(R.id.textView);
+            textView = v.findViewById(R.id.tx);
         }
 
         public TextView getTextView() {
@@ -53,7 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    public RecyclerAdapter(ArrayList<String> dataSet) {
+    public SelectionRecyclerAdapter(ArrayList<String> dataSet) {
         recyclerViewItems = dataSet;
     }
 

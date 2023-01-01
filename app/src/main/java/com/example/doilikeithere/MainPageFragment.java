@@ -9,18 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.doilikeithere.databinding.FragmentFirstBinding;
+import com.example.doilikeithere.databinding.FragmentMainPageBinding;
 
-public class FirstFragment extends Fragment {
+public class MainPageFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentMainPageBinding binding;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentMainPageBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -30,8 +30,8 @@ public class FirstFragment extends Fragment {
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(MainPageFragment.this)
+                        .navigate(R.id.action_MainPageFragment_to_ReviewFragment);
             }
         });
     }

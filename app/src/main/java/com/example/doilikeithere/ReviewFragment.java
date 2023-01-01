@@ -11,18 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.doilikeithere.databinding.FragmentSecondBinding;
+import com.example.doilikeithere.databinding.FragmentReviewBinding;
 
 import java.io.IOException;
 
-public class SecondFragment extends Fragment {
+public class ReviewFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentReviewBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentReviewBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -41,8 +41,8 @@ public class SecondFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                NavHostFragment.findNavController(ReviewFragment.this)
+                        .navigate(R.id.action_ReviewFragment_to_MainPageFragment);
             }
         });
 
@@ -52,8 +52,8 @@ public class SecondFragment extends Fragment {
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_selectionFragment);
+                NavHostFragment.findNavController(ReviewFragment.this)
+                        .navigate(R.id.action_ReviewFragment_to_SelectionFragment);
             }
         });
     }
