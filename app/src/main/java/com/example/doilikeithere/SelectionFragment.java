@@ -30,7 +30,7 @@ public class SelectionFragment extends Fragment {
 
     protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
-    protected RecyclerAdapter recyclerAdapter;
+    protected SelectionRecyclerAdapter selectionRecyclerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,14 +51,22 @@ public class SelectionFragment extends Fragment {
         DataManager.selected.clear();
 
         //Create test data
-        for(int i = 0; i < 5; i++) {
-            try {
-                DataManager.addNewItem(getContext(), "Positives", "Store", 2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//        for(int i = 0; i < 1; i++) {
+//            try {
+//                DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        try {
+            DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         // Get items for Recyclerview
@@ -85,9 +93,9 @@ public class SelectionFragment extends Fragment {
 
         setRecyclerViewLayoutManager();
 
-        recyclerAdapter = new RecyclerAdapter(recyclerViewItems);
+        selectionRecyclerAdapter = new SelectionRecyclerAdapter(recyclerViewItems);
         // Set RecyclerAdapter as the adapter for RecyclerView.
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setAdapter(selectionRecyclerAdapter);
 
         return binding.getRoot();
     }
@@ -113,7 +121,7 @@ public class SelectionFragment extends Fragment {
                 }
 
                 NavHostFragment.findNavController(SelectionFragment.this)
-                        .navigate(R.id.action_selectionFragment_to_SecondFragment);
+                        .navigate(R.id.action_SelectionFragment_to_ReviewFragment);
             }
         });
     }
@@ -133,7 +141,7 @@ public class SelectionFragment extends Fragment {
     private void getRecyclerViewData() throws IOException, JSONException {
         // Get data for recyclerview.
         // Make arrayName selection DYNAMIC later. Currently returns only items labeled as positive.
-        recyclerViewItems = DataManager.loadRecyclerviewItems(getContext(), "Positives");
+        recyclerViewItems = DataManager.loadSelectionRecyclerviewItems(getContext(), "Positives");
     }
 
     @Override

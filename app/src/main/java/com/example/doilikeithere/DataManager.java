@@ -19,6 +19,7 @@ import java.util.Objects;
 
 public class DataManager {
     static final String FileName = "Database";
+    private static final String TAG = "DataManager";
 
     public static ArrayList<String> tempPositives = new ArrayList<>();
     public static ArrayList<String> tempNegatives = new ArrayList<>();
@@ -42,6 +43,7 @@ public class DataManager {
         }
     }
 
+    // DO THIS INSIDE A TRY/CATCH STATEMENT????
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
         Log.d("DataManager", "Initialize database");
@@ -94,9 +96,13 @@ public class DataManager {
     private static String readFile(Context context) throws IOException, JSONException {
         File file = new File(context.getFilesDir(), FileName);
         if (!file.exists()) {
-            Log.d("DataManager", "File doesn't exist.");
+            Log.d(TAG, "File doesn't exist.");
             initializeDatabase(context);
             file = new File(context.getFilesDir(), FileName);
+        }
+        if (!file.exists()) {
+            Log.d(TAG, "File doesn't exist.");
+            writeFile(context, "");
         }
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -118,8 +124,9 @@ public class DataManager {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(userString);
         bufferedWriter.close();
-        Log.d("DataManager", "writeFile: userString " + userString);
+        Log.d(TAG, "writeFile: userString " + userString);
     }
+
 
     // Add new item to (positive, negative, or feeling) JSON file.
     // arrayName can be "positive", "negative", or "feelings".
@@ -145,6 +152,33 @@ public class DataManager {
         writeFile(context, loadedJSONObject.toString());
     }
 
+    private static int calculateScore(Context context) throws JSONException, IOException {
+        // Read file and convert to string.
+        String response = readFile(context);
+
+        // Put response string to JSONObject and get array according to arrayName parameter.
+        // JSON ARRAY NAME HARD CODED FOR TESTING PURPOSES. MAKE DYNAMIC (e.g. String[]).
+        JSONObject jsonObject = new JSONObject(response);
+        JSONArray jsonArray = jsonObject.getJSONArray("Positives");
+
+        int totalScore= 0;
+
+        // Get Weight of each tempPositives item.
+        // Ignore multiple entries with same name by breaking loop after first one is found.
+        // Not the most elegant solution, but works for now. :)
+        for (String s : tempPositives) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject current = jsonArray.getJSONObject(i);
+                if (current.getString("Name").equals(s)) {
+                    totalScore += current.getInt("Weight");
+                    break;
+                }
+            }
+
+        }
+        return totalScore;
+    }
+
     // Add a new place review into the database.
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
         // Read file and convert to string.
@@ -159,6 +193,10 @@ public class DataManager {
         JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
 
         // CALCULATE TOTAL SCORE BEFORE CREATING NEW ENTRY.
+
+        int totalScore = calculateScore(context);
+        Log.d(TAG, "Total score: " + totalScore);
+
         JSONObject jsonObject = new JSONObject();
         // HARD CODED VALUES USED FOR TESTING PURPOSES.
         try {
@@ -166,7 +204,7 @@ public class DataManager {
             jsonObject.put("Positives", listString);
             jsonObject.put("Negatives", "None");
             jsonObject.put("Feelings", "None");
-            jsonObject.put("Total score", 10);
+            jsonObject.put("Total score", totalScore);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -180,7 +218,7 @@ public class DataManager {
     }
 
     // Load JSON data for positive, negative, and feelings selection.
-    public static ArrayList<String> loadRecyclerviewItems(Context context, String arrayName)
+    public static ArrayList<String> loadSelectionRecyclerviewItems(Context context, String arrayName)
             throws IOException, JSONException {
         // Read data back from file.
         String response = readFile(context);
@@ -199,12 +237,54 @@ public class DataManager {
         try {
             for (int i = 1; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
-                Log.d("DataManager", jsonTemp.getString("Name"));
+                Log.d(TAG, jsonTemp.getString("Name"));
                 requestedValues.add(jsonTemp.getString("Name"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return requestedValues;
+    }
+
+    public static ArrayList<String> loadReviewsRecyclerviewItems(Context context)
+            throws JSONException, IOException {
+        String response = readFile(context);
+
+        JSONObject jsonObject = new JSONObject(response);
+        JSONArray jsonArray = jsonObject.getJSONArray("Reviews");
+
+        // Array for requested values.
+        ArrayList<String> requestedValues = new ArrayList<>();
+
+        // Get review data.
+        // STREAMLINE THIS PROSES IN THE LONG RUN.
+        try {
+            for (int i = 1; i < jsonArray.length(); i++) {
+                JSONObject jsonTemp = jsonArray.getJSONObject(i);
+                //Log.d("DataManager", jsonTemp.getString("Location"));
+                String result = "";
+                result += "Location: ";
+                result += jsonTemp.getString("Location");
+                result += " ";
+                result += "Positives: ";
+                result += jsonTemp.getString("Positives");
+                result += " ";
+                result += "Negatives: ";
+                result += jsonTemp.getString("Negatives");
+                result += " ";
+                result += "Feelings: ";
+                result += jsonTemp.getString("Feelings");
+                result += " ";
+                result += "Total score: ";
+                result += jsonTemp.getString("Total score");
+                requestedValues.add(result);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, requestedValues.toString());
 
         return requestedValues;
     }

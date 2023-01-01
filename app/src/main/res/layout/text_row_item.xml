@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:gravity="center_vertical">
+    android:layout_height="62sp"
+    android:layout_marginLeft="16sp"
+    android:layout_marginRight="16sp"
+    android:gravity="center">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/tx"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Element"/>
+        android:text="Element"
+        android:textAlignment="center"
+        android:textSize="15sp" />
 </FrameLayout>
