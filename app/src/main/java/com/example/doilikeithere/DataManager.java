@@ -139,6 +139,13 @@ public class DataManager {
         JSONObject loadedJSONObject = new JSONObject(response);
         JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
 
+        // Check if item with the same name already exists.
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).getString("Name").equals(nameValue)) {
+                return;
+            }
+        }
+
         // Create new JSON object and put object into the selected jsonArray.
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Name", nameValue);
@@ -152,6 +159,7 @@ public class DataManager {
         writeFile(context, loadedJSONObject.toString());
     }
 
+    // Calculate place score by summing positives together and subtracting negatives from the total.
     private static int calculateScore(Context context) throws JSONException, IOException {
         // Read file and convert to string.
         String response = readFile(context);

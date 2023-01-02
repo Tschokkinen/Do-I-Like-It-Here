@@ -3,6 +3,7 @@ package com.example.doilikeithere;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,21 +23,27 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
 
         public ViewHolder(View v) {
             super(v);
+
+            int selected = Color.parseColor("#78ABEC");
+            int defaultColor = Color.parseColor("#FFFFFF");
+
             // Click listener for the ViewHolder's View.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Log.d(TAG, "Element " + getBindingAdapterPosition() + " clicked.");
                     textView = v.findViewById(R.id.tx);
-                    if (textView.getCurrentTextColor() == Color.RED) {
-                        textView.setTextColor(Color.BLACK);
+                    if (textView.getCurrentTextColor() == Color.BLACK) {
+                        textView.setBackgroundColor(Color.TRANSPARENT);
+                        textView.setTextColor(Color.GRAY);
                         // Save selection to DataManager selected ArrayList
                         if (DataManager.selected.contains(textView.getText().toString())) {
                             DataManager.selected.remove(textView.getText().toString());
                             Log.d(TAG, "Removed: " + textView.getText().toString());
                         }
                     } else {
-                        textView.setTextColor(Color.RED);
+                        textView.setBackgroundColor(selected);
+                        textView.setTextColor(Color.BLACK);
                         // Remove selection from DataManager selected ArrayList
                         if (!DataManager.selected.contains(textView.getText().toString())) {
                             DataManager.selected.add(textView.getText().toString());

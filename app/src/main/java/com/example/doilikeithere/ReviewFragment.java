@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.doilikeithere.databinding.FragmentReviewBinding;
@@ -47,13 +49,23 @@ public class ReviewFragment extends Fragment {
         });
 
         // Go to selection page where user can select attributes to review the current place.
-        // CURRENTLY LOADS STATICALLY "POSITIVES" DATA ONLY. MAKE LOADING DYNAMIC SO THAT
-        // ALSO NEGATIVE AND FEELINGS DATA GETS LOADED.
-        binding.button.setOnClickListener(new View.OnClickListener() {
+        binding.selectPositivesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("Selection", "Positives");
                 NavHostFragment.findNavController(ReviewFragment.this)
-                        .navigate(R.id.action_ReviewFragment_to_SelectionFragment);
+                        .navigate(R.id.action_ReviewFragment_to_SelectionFragment, bundle);
+            }
+        });
+
+        binding.selectNegativesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("Selection", "Negatives");
+                NavHostFragment.findNavController(ReviewFragment.this)
+                        .navigate(R.id.action_ReviewFragment_to_SelectionFragment, bundle);
             }
         });
     }
