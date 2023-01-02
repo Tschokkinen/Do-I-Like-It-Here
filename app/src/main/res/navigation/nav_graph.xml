@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_main_page">
         <action
             android:id="@+id/action_MainPageFragment_to_ReviewFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/ReviewFragment" />
         <action
             android:id="@+id/action_MainPageFragment_to_HistoryFragment"
             app:destination="@id/historyFragment" />
@@ -21,7 +21,7 @@
             app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/ReviewFragment"
         android:name="com.example.doilikeithere.ReviewFragment"
         android:label="@string/fragment_title_review_place"
         tools:layout="@layout/fragment_review">
@@ -41,8 +41,8 @@
         tools:layout="@layout/fragment_selection">
         <action
             android:id="@+id/action_SelectionFragment_to_ReviewFragment"
-            app:destination="@id/SecondFragment"
-            app:popUpTo="@+id/SecondFragment"
+            app:destination="@id/ReviewFragment"
+            app:popUpTo="@+id/ReviewFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment

@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,11 +24,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SelectionFragment extends Fragment {
-
+    private String TAG = "SelectionFragment";
     private FragmentSelectionBinding binding;
 
     protected ArrayList<String> recyclerViewItems = new ArrayList<>();
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
+    private String arrayName;
 
     protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
@@ -35,6 +38,11 @@ public class SelectionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        arrayName = getArguments().getString("Selection");
+
+        // Set action bar title according to user selection.
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Select " + arrayName);
 
         // Device back button click.
         // Doesn't do anything at the moment.
@@ -51,16 +59,6 @@ public class SelectionFragment extends Fragment {
         DataManager.selected.clear();
 
         //Create test data
-//        for(int i = 0; i < 1; i++) {
-//            try {
-//                DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
         try {
             DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
         } catch (IOException e) {
@@ -71,7 +69,7 @@ public class SelectionFragment extends Fragment {
 
         // Get items for Recyclerview
         try {
-            getRecyclerViewData();
+            getRecyclerViewData(arrayName);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -138,10 +136,9 @@ public class SelectionFragment extends Fragment {
         recyclerView.scrollToPosition(scrollPosition);
     }
 
-    private void getRecyclerViewData() throws IOException, JSONException {
+    private void getRecyclerViewData(String arrayName) throws IOException, JSONException {
         // Get data for recyclerview.
-        // Make arrayName selection DYNAMIC later. Currently returns only items labeled as positive.
-        recyclerViewItems = DataManager.loadSelectionRecyclerviewItems(getContext(), "Positives");
+        recyclerViewItems = DataManager.loadSelectionRecyclerviewItems(getContext(), arrayName);
     }
 
     @Override
