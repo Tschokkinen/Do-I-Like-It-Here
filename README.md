@@ -4,7 +4,7 @@ Version: 0.0.0.0.0.1.
 
 Platform: Android
 
-Other notes: Work still in progress. :) The project will be updated during the Spring of 2023.
+Other notes: Work still in progress. :) The project will be updated during 2023.
 
 ------
 
