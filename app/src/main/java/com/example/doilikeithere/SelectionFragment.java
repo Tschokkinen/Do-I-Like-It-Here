@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,13 +60,13 @@ public class SelectionFragment extends Fragment {
         DataManager.selected.clear();
 
         //Create test data
-        try {
-            DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         // Get items for Recyclerview
         try {
@@ -109,13 +110,26 @@ public class SelectionFragment extends Fragment {
                 // CLEAR TEMP ARRAY BY NAME: HARD CODED FOR TESTING.
                 // For example, pass arrayName (Positives) and clear temp folder according to
                 // that selection.
-                DataManager.clearTemps("tempPositives");
+                if (arrayName.equals("Positives")) {
+                    DataManager.clearTemps(DataManager.TempArrays.TEMP_POSITIVES);
+                } else if (arrayName.equals("Negatives")) {
+                    DataManager.clearTemps(DataManager.TempArrays.TEMP_NEGATIVES);
+                } else if (arrayName.equals("Feelings")) {
+                    DataManager.clearTemps(DataManager.TempArrays.TEMP_FEELINGS);
+                }
 
                 // Save selections to temp array list.
                 // MAKE SAVING DYNAMIC ACCORDING TO THE TYPE OF PAGE BEING DISPLAYED:
                 // I.E. POSITIVE, NEGATIVE, or FEELINGS.
                 for(String s: DataManager.selected) {
-                    DataManager.tempPositives.add(s);
+                    if (arrayName.equals("Positives")) {
+                        DataManager.tempPositives.add(s);
+                    } else if (arrayName.equals("Negatives")) {
+                        DataManager.tempNegatives.add(s);
+                    } else if (arrayName.equals("Feelings")) {
+                        DataManager.tempFeelings.add(s);
+                    }
+
                 }
 
                 NavHostFragment.findNavController(SelectionFragment.this)

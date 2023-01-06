@@ -23,7 +23,6 @@ public class HistoryFragment extends Fragment {
     private FragmentHistoryBinding binding;
 
     protected ArrayList<String> recyclerViewItems = new ArrayList<>();
-    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
 
     protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
