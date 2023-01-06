@@ -18,29 +18,44 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class DataManager {
+
+    public static enum TempArrays {
+        TEMP_POSITIVES,
+        TEMP_NEGATIVES,
+        TEMP_FEELINGS
+    }
     static final String FileName = "Database";
     private static final String TAG = "DataManager";
 
+    public static String location = "";
     public static ArrayList<String> tempPositives = new ArrayList<>();
     public static ArrayList<String> tempNegatives = new ArrayList<>();
     public static ArrayList<String> tempFeelings = new ArrayList<>();
     public static ArrayList<String> selected = new ArrayList<>();
 
     // Clear temp arrays.
-    public static void clearTemps(String tempName) {
+    public static void clearTemps(TempArrays tempName) {
         switch (tempName) {
-            case "tempPositives":
+            case TEMP_POSITIVES:
                 tempPositives.clear();
                 break;
-            case "tempNegatives":
+            case TEMP_NEGATIVES:
                 tempNegatives.clear();
                 break;
-            case "tempFeelings":
+            case TEMP_FEELINGS:
                 tempFeelings.clear();
                 break;
             default:
                 break;
         }
+    }
+
+    // Called when a new review has been saved.
+    private static void clearAllVariables() {
+        clearTemps(TempArrays.TEMP_POSITIVES);
+        clearTemps(TempArrays.TEMP_NEGATIVES);
+        clearTemps(TempArrays.TEMP_FEELINGS);
+        location = "";
     }
 
     // DO THIS INSIDE A TRY/CATCH STATEMENT????
@@ -61,7 +76,7 @@ public class DataManager {
                 // Values used for testing. REMOVE when testing done.
                 try {
                     jsonObject.put("Name", "None");
-                    jsonObject.put("Weight", "None");
+                    jsonObject.put("Weight", 0);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -146,6 +161,8 @@ public class DataManager {
             }
         }
 
+        Log.d(TAG, String.valueOf(itemWeight));
+
         // Create new JSON object and put object into the selected jsonArray.
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Name", nameValue);
@@ -161,40 +178,58 @@ public class DataManager {
 
     // Calculate place score by summing positives together and subtracting negatives from the total.
     private static int calculateScore(Context context) throws JSONException, IOException {
+        int totalScore = 0;
+
         // Read file and convert to string.
         String response = readFile(context);
 
         // Put response string to JSONObject and get array according to arrayName parameter.
         // JSON ARRAY NAME HARD CODED FOR TESTING PURPOSES. MAKE DYNAMIC (e.g. String[]).
         JSONObject jsonObject = new JSONObject(response);
+
         JSONArray jsonArray = jsonObject.getJSONArray("Positives");
+        totalScore = calculate(jsonArray, tempPositives, totalScore);
 
-        int totalScore= 0;
+        jsonArray = jsonObject.getJSONArray("Negatives");
+        totalScore = calculate(jsonArray, tempNegatives, totalScore);
 
-        // Get Weight of each tempPositives item.
+        jsonArray = jsonObject.getJSONArray("Feelings");
+        totalScore = calculate(jsonArray, tempFeelings, totalScore);
+
+        Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
+        return totalScore;
+    }
+
+    // NOTE TO SELF: Combine this to calculateScore method.
+    private static int calculate (JSONArray jsonArray, ArrayList<String> tempArray, int totalScore)
+                throws JSONException {
+        // Get Weight of each temp item.
         // Ignore multiple entries with same name by breaking loop after first one is found.
         // Not the most elegant solution, but works for now. :)
-        for (String s : tempPositives) {
+        for (String s : tempArray) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject current = jsonArray.getJSONObject(i);
                 if (current.getString("Name").equals(s)) {
-                    totalScore += current.getInt("Weight");
+                    int value = current.getInt("Weight");
+                    Log.d(TAG, "Value of calculate total score " + value);
+                    totalScore += value;
                     break;
                 }
             }
-
         }
         return totalScore;
     }
+
 
     // Add a new place review into the database.
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
         // Read file and convert to string.
         String response = readFile(context);
 
-        // HARD CODED FOR TESTING. MAKE ARRAY DYNAMIC.
-        // Convert tempPositives to String
-        String listString = String.join(", ", tempPositives);
+        // Convert tempArrays to Strings
+        String positivesListString = String.join(", ", tempPositives);
+        String negativesListString = String.join(", ", tempNegatives);
+        String feelingsListString = String.join(", ", tempFeelings);
 
         // Put response string to JSONObject and get array according to arrayName parameter.
         JSONObject loadedJSONObject = new JSONObject(response);
@@ -206,12 +241,11 @@ public class DataManager {
         Log.d(TAG, "Total score: " + totalScore);
 
         JSONObject jsonObject = new JSONObject();
-        // HARD CODED VALUES USED FOR TESTING PURPOSES.
         try {
-            jsonObject.put("Location", "Hesa");
-            jsonObject.put("Positives", listString);
-            jsonObject.put("Negatives", "None");
-            jsonObject.put("Feelings", "None");
+            jsonObject.put("Location", location);
+            jsonObject.put("Positives", positivesListString);
+            jsonObject.put("Negatives", negativesListString);
+            jsonObject.put("Feelings", feelingsListString);
             jsonObject.put("Total score", totalScore);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -220,6 +254,8 @@ public class DataManager {
 
         // Put updated jsonArray in loadedJSON object according to arrayName parameter.
         loadedJSONObject.put(arrayName, jsonArray);
+
+        clearAllVariables();
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());

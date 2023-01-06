@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import java.io.IOException;
 public class ReviewFragment extends Fragment {
 
     private FragmentReviewBinding binding;
+    private EditText location_editText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,11 +34,20 @@ public class ReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        location_editText = (EditText) getView().findViewById(R.id.editTextLocation);
+
+        if (!DataManager.location.isEmpty()) {
+            location_editText.setText(DataManager.location);
+        } else {
+            location_editText.setText("");
+        }
+
         // Save review to database and go back to the main page (i.e. FirstFragment).
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
+                    checkLocationEditText();
                     DataManager.addNewReview(getContext(), "Reviews");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -52,6 +63,7 @@ public class ReviewFragment extends Fragment {
         binding.selectPositivesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkLocationEditText();
                 Bundle bundle = new Bundle();
                 bundle.putString("Selection", "Positives");
                 NavHostFragment.findNavController(ReviewFragment.this)
@@ -62,12 +74,31 @@ public class ReviewFragment extends Fragment {
         binding.selectNegativesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkLocationEditText();
                 Bundle bundle = new Bundle();
                 bundle.putString("Selection", "Negatives");
                 NavHostFragment.findNavController(ReviewFragment.this)
                         .navigate(R.id.action_ReviewFragment_to_SelectionFragment, bundle);
             }
         });
+
+        binding.selectFeelingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkLocationEditText();
+                Bundle bundle = new Bundle();
+                bundle.putString("Selection", "Feelings");
+                NavHostFragment.findNavController(ReviewFragment.this)
+                        .navigate(R.id.action_ReviewFragment_to_SelectionFragment, bundle);
+            }
+        });
+    }
+
+    // Check if location has been entered in location_editText field.
+    private void checkLocationEditText() {
+        if (!location_editText.getText().toString().isEmpty()) {
+            DataManager.location = location_editText.getText().toString();
+        }
     }
 
     @Override
