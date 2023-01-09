@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class DataManager {
 
-    public static enum TempArrays {
+    public enum TempArrays {
         TEMP_POSITIVES,
         TEMP_NEGATIVES,
         TEMP_FEELINGS
@@ -27,13 +27,14 @@ public class DataManager {
     static final String FileName = "Database";
     private static final String TAG = "DataManager";
 
+    public static int latestReviewScore = 0;
     public static String location = "";
     public static ArrayList<String> tempPositives = new ArrayList<>();
     public static ArrayList<String> tempNegatives = new ArrayList<>();
     public static ArrayList<String> tempFeelings = new ArrayList<>();
     public static ArrayList<String> selected = new ArrayList<>();
 
-    // Clear temp arrays.
+    // Clear selected temp array.
     public static void clearTemps(TempArrays tempName) {
         switch (tempName) {
             case TEMP_POSITIVES:
@@ -50,8 +51,8 @@ public class DataManager {
         }
     }
 
-    // Called when a new review has been saved.
-    private static void clearAllVariables() {
+    // Clears all tempArrays.
+    public static void clearAllDataCollectionVariables() {
         clearTemps(TempArrays.TEMP_POSITIVES);
         clearTemps(TempArrays.TEMP_NEGATIVES);
         clearTemps(TempArrays.TEMP_FEELINGS);
@@ -61,11 +62,11 @@ public class DataManager {
     // DO THIS INSIDE A TRY/CATCH STATEMENT????
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
-        Log.d("DataManager", "Initialize database");
+        Log.d(TAG, "Initialize database");
         File file = new File(context.getFilesDir(), FileName);
 
         if (!file.exists()) {
-            Log.d("DataManager", "File doesn't exist.");
+            Log.d(TAG, "File doesn't exist.");
             String[] jsonArrayNames = {"Positives", "Negatives", "Feelings", "Reviews"};
             JSONObject newDatabase = new JSONObject();
 
@@ -142,7 +143,6 @@ public class DataManager {
         Log.d(TAG, "writeFile: userString " + userString);
     }
 
-
     // Add new item to (positive, negative, or feeling) JSON file.
     // arrayName can be "positive", "negative", or "feelings".
     public static void addNewItem(Context context, String arrayName, String nameValue,
@@ -197,6 +197,7 @@ public class DataManager {
         totalScore = calculate(jsonArray, tempFeelings, totalScore);
 
         Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
+        latestReviewScore = totalScore;
         return totalScore;
     }
 
@@ -219,7 +220,6 @@ public class DataManager {
         }
         return totalScore;
     }
-
 
     // Add a new place review into the database.
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
@@ -255,7 +255,7 @@ public class DataManager {
         // Put updated jsonArray in loadedJSON object according to arrayName parameter.
         loadedJSONObject.put(arrayName, jsonArray);
 
-        clearAllVariables();
+        clearAllDataCollectionVariables();
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
