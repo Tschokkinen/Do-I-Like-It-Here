@@ -22,13 +22,21 @@ public class ReviewFragment extends Fragment {
 
     private FragmentReviewBinding binding;
     private EditText location_editText;
+    private String fromMainPageFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Check Bundle to see if user navigated to fragment from main_page.
+        // If so, clear all temp arrays and location.
+        Bundle arguments = getArguments();
+        if (arguments != null && arguments.containsKey("FromMainPage")) {
+            DataManager.clearAllDataCollectionVariables();
+        }
+
         binding = FragmentReviewBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -54,8 +62,9 @@ public class ReviewFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
                 NavHostFragment.findNavController(ReviewFragment.this)
-                        .navigate(R.id.action_ReviewFragment_to_MainPageFragment);
+                        .navigate(R.id.action_ReviewFragment_to_displayReviewScore);
             }
         });
 

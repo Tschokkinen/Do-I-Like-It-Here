@@ -15,11 +15,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class DataManager {
 
-    public static enum TempArrays {
+    public enum TempArrays {
         TEMP_POSITIVES,
         TEMP_NEGATIVES,
         TEMP_FEELINGS
@@ -27,13 +28,22 @@ public class DataManager {
     static final String FileName = "Database";
     private static final String TAG = "DataManager";
 
+    public static int latestReviewScore = 0;
     public static String location = "";
     public static ArrayList<String> tempPositives = new ArrayList<>();
     public static ArrayList<String> tempNegatives = new ArrayList<>();
     public static ArrayList<String> tempFeelings = new ArrayList<>();
     public static ArrayList<String> selected = new ArrayList<>();
+    public static String[] jsonArrayNames = { "Positives", "Negatives", "Feelings" };
+    public static ArrayList<ArrayList> tempArrays = new ArrayList<ArrayList>() {
+        {
+            add(tempPositives);
+            add(tempNegatives);
+            add(tempFeelings);
+        }
+    };
 
-    // Clear temp arrays.
+    // Clear selected temp array.
     public static void clearTemps(TempArrays tempName) {
         switch (tempName) {
             case TEMP_POSITIVES:
@@ -50,22 +60,22 @@ public class DataManager {
         }
     }
 
-    // Called when a new review has been saved.
-    private static void clearAllVariables() {
+    // Clears all tempArrays.
+    public static void clearAllDataCollectionVariables() {
         clearTemps(TempArrays.TEMP_POSITIVES);
         clearTemps(TempArrays.TEMP_NEGATIVES);
         clearTemps(TempArrays.TEMP_FEELINGS);
         location = "";
     }
 
-    // DO THIS INSIDE A TRY/CATCH STATEMENT????
+    // DO THIS A SMARTER WAY.
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
-        Log.d("DataManager", "Initialize database");
+        Log.d(TAG, "Initialize database");
         File file = new File(context.getFilesDir(), FileName);
 
         if (!file.exists()) {
-            Log.d("DataManager", "File doesn't exist.");
+            Log.d(TAG, "File doesn't exist.");
             String[] jsonArrayNames = {"Positives", "Negatives", "Feelings", "Reviews"};
             JSONObject newDatabase = new JSONObject();
 
@@ -142,7 +152,6 @@ public class DataManager {
         Log.d(TAG, "writeFile: userString " + userString);
     }
 
-
     // Add new item to (positive, negative, or feeling) JSON file.
     // arrayName can be "positive", "negative", or "feelings".
     public static void addNewItem(Context context, String arrayName, String nameValue,
@@ -184,42 +193,34 @@ public class DataManager {
         String response = readFile(context);
 
         // Put response string to JSONObject and get array according to arrayName parameter.
-        // JSON ARRAY NAME HARD CODED FOR TESTING PURPOSES. MAKE DYNAMIC (e.g. String[]).
         JSONObject jsonObject = new JSONObject(response);
 
-        JSONArray jsonArray = jsonObject.getJSONArray("Positives");
-        totalScore = calculate(jsonArray, tempPositives, totalScore);
-
-        jsonArray = jsonObject.getJSONArray("Negatives");
-        totalScore = calculate(jsonArray, tempNegatives, totalScore);
-
-        jsonArray = jsonObject.getJSONArray("Feelings");
-        totalScore = calculate(jsonArray, tempFeelings, totalScore);
-
-        Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
-        return totalScore;
-    }
-
-    // NOTE TO SELF: Combine this to calculateScore method.
-    private static int calculate (JSONArray jsonArray, ArrayList<String> tempArray, int totalScore)
-                throws JSONException {
-        // Get Weight of each temp item.
-        // Ignore multiple entries with same name by breaking loop after first one is found.
-        // Not the most elegant solution, but works for now. :)
-        for (String s : tempArray) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject current = jsonArray.getJSONObject(i);
-                if (current.getString("Name").equals(s)) {
-                    int value = current.getInt("Weight");
-                    Log.d(TAG, "Value of calculate total score " + value);
-                    totalScore += value;
-                    break;
+        // Get current JsonArray name (Positives, Negatives, Feelings).
+        for (String arrayName : jsonArrayNames) {
+            JSONArray jsonArray = jsonObject.getJSONArray(arrayName);
+            // Get tempArray that corresponds with JsonArray name
+            // (tempPositives, tempNegatives, tempFeelings).
+            for (ArrayList tempArray : tempArrays) {
+                // Get Weight of each temp item.
+                // Ignore multiple entries with same name by breaking loop after first one is found.
+                for (Object s : tempArray) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject current = jsonArray.getJSONObject(i);
+                        if (current.getString("Name").equals(s)) {
+                            int value = current.getInt("Weight");
+                            Log.d(TAG, "Value of calculate total score " + value);
+                            totalScore += value;
+                            break;
+                        }
+                    }
                 }
             }
-        }
+        } // Not the most elegant solution with tons of nesting, but works for now. :)
+
+        Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
+        latestReviewScore = totalScore;
         return totalScore;
     }
-
 
     // Add a new place review into the database.
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
@@ -235,8 +236,7 @@ public class DataManager {
         JSONObject loadedJSONObject = new JSONObject(response);
         JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
 
-        // CALCULATE TOTAL SCORE BEFORE CREATING NEW ENTRY.
-
+        // Calculate total score before creating a new entry.
         int totalScore = calculateScore(context);
         Log.d(TAG, "Total score: " + totalScore);
 
@@ -255,7 +255,7 @@ public class DataManager {
         // Put updated jsonArray in loadedJSON object according to arrayName parameter.
         loadedJSONObject.put(arrayName, jsonArray);
 
-        clearAllVariables();
+        clearAllDataCollectionVariables();
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
@@ -302,7 +302,7 @@ public class DataManager {
         ArrayList<String> requestedValues = new ArrayList<>();
 
         // Get review data.
-        // STREAMLINE THIS PROSES IN THE LONG RUN.
+        // STREAMLINE THIS MONSTER IN THE LONG RUN.
         try {
             for (int i = 1; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);

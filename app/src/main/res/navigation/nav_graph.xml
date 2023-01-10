@@ -33,6 +33,22 @@
         <action
             android:id="@+id/action_ReviewFragment_to_SelectionFragment"
             app:destination="@id/SelectionFragment" />
+        <action
+            android:id="@+id/action_ReviewFragment_to_displayReviewScore"
+            app:destination="@id/DisplayReviewScoreFragment"
+            app:popUpTo="@id/ReviewFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/DisplayReviewScoreFragment"
+        android:name="com.example.doilikeithere.DisplayReviewScore"
+        android:label="Review score"
+        tools:layout="@layout/fragment_display_review_score" >
+        <action
+            android:id="@+id/action_DisplayReviewScoreFragment_to_MainPageFragment"
+            app:destination="@id/MainPageFragment"
+            app:popUpTo="@id/MainPageFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/SelectionFragment"

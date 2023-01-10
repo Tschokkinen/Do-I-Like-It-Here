@@ -47,26 +47,17 @@ public class SelectionFragment extends Fragment {
 
         // Device back button click.
         // Doesn't do anything at the moment.
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button even
-                Log.d("BACKBUTTON", "Back button clicks");
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+//        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                // Handle the back button even
+//                Log.d("BACKBUTTON", "Back button clicks");
+//            }
+//        };
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
         // Clear selections made by RecyclerAdapter.
         DataManager.selected.clear();
-
-        //Create test data
-//        try {
-//            DataManager.addNewItem(getContext(), "Positives", "Beach", 8);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
         // Get items for Recyclerview
         try {
@@ -106,10 +97,7 @@ public class SelectionFragment extends Fragment {
         binding.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Clear temp Array.
-                // CLEAR TEMP ARRAY BY NAME: HARD CODED FOR TESTING.
-                // For example, pass arrayName (Positives) and clear temp folder according to
-                // that selection.
+                // Clear temp array that corresponds to the data displayed by the recycler view.
                 if (arrayName.equals("Positives")) {
                     DataManager.clearTemps(DataManager.TempArrays.TEMP_POSITIVES);
                 } else if (arrayName.equals("Negatives")) {
@@ -118,10 +106,8 @@ public class SelectionFragment extends Fragment {
                     DataManager.clearTemps(DataManager.TempArrays.TEMP_FEELINGS);
                 }
 
-                // Save selections to temp array list.
-                // MAKE SAVING DYNAMIC ACCORDING TO THE TYPE OF PAGE BEING DISPLAYED:
-                // I.E. POSITIVE, NEGATIVE, or FEELINGS.
-                for(String s: DataManager.selected) {
+                // Save user selections to empty temp array list.
+                for(String s : DataManager.selected) {
                     if (arrayName.equals("Positives")) {
                         DataManager.tempPositives.add(s);
                     } else if (arrayName.equals("Negatives")) {
@@ -129,7 +115,6 @@ public class SelectionFragment extends Fragment {
                     } else if (arrayName.equals("Feelings")) {
                         DataManager.tempFeelings.add(s);
                     }
-
                 }
 
                 NavHostFragment.findNavController(SelectionFragment.this)
