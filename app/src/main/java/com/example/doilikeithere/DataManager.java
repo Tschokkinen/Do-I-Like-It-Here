@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class DataManager {
@@ -33,6 +34,14 @@ public class DataManager {
     public static ArrayList<String> tempNegatives = new ArrayList<>();
     public static ArrayList<String> tempFeelings = new ArrayList<>();
     public static ArrayList<String> selected = new ArrayList<>();
+    public static String[] jsonArrayNames = { "Positives", "Negatives", "Feelings" };
+    public static ArrayList<ArrayList> tempArrays = new ArrayList<ArrayList>() {
+        {
+            add(tempPositives);
+            add(tempNegatives);
+            add(tempFeelings);
+        }
+    };
 
     // Clear selected temp array.
     public static void clearTemps(TempArrays tempName) {
@@ -59,7 +68,7 @@ public class DataManager {
         location = "";
     }
 
-    // DO THIS INSIDE A TRY/CATCH STATEMENT????
+    // DO THIS A SMARTER WAY.
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
         Log.d(TAG, "Initialize database");
@@ -184,40 +193,32 @@ public class DataManager {
         String response = readFile(context);
 
         // Put response string to JSONObject and get array according to arrayName parameter.
-        // JSON ARRAY NAME HARD CODED FOR TESTING PURPOSES. MAKE DYNAMIC (e.g. String[]).
         JSONObject jsonObject = new JSONObject(response);
 
-        JSONArray jsonArray = jsonObject.getJSONArray("Positives");
-        totalScore = calculate(jsonArray, tempPositives, totalScore);
-
-        jsonArray = jsonObject.getJSONArray("Negatives");
-        totalScore = calculate(jsonArray, tempNegatives, totalScore);
-
-        jsonArray = jsonObject.getJSONArray("Feelings");
-        totalScore = calculate(jsonArray, tempFeelings, totalScore);
+        // Get current JsonArray name (Positives, Negatives, Feelings).
+        for (String arrayName : jsonArrayNames) {
+            JSONArray jsonArray = jsonObject.getJSONArray(arrayName);
+            // Get tempArray that corresponds with JsonArray name
+            // (tempPositives, tempNegatives, tempFeelings).
+            for (ArrayList tempArray : tempArrays) {
+                // Get Weight of each temp item.
+                // Ignore multiple entries with same name by breaking loop after first one is found.
+                for (Object s : tempArray) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject current = jsonArray.getJSONObject(i);
+                        if (current.getString("Name").equals(s)) {
+                            int value = current.getInt("Weight");
+                            Log.d(TAG, "Value of calculate total score " + value);
+                            totalScore += value;
+                            break;
+                        }
+                    }
+                }
+            }
+        } // Not the most elegant solution with tons of nesting, but works for now. :)
 
         Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
         latestReviewScore = totalScore;
-        return totalScore;
-    }
-
-    // NOTE TO SELF: Combine this to calculateScore method.
-    private static int calculate (JSONArray jsonArray, ArrayList<String> tempArray, int totalScore)
-                throws JSONException {
-        // Get Weight of each temp item.
-        // Ignore multiple entries with same name by breaking loop after first one is found.
-        // Not the most elegant solution, but works for now. :)
-        for (String s : tempArray) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject current = jsonArray.getJSONObject(i);
-                if (current.getString("Name").equals(s)) {
-                    int value = current.getInt("Weight");
-                    Log.d(TAG, "Value of calculate total score " + value);
-                    totalScore += value;
-                    break;
-                }
-            }
-        }
         return totalScore;
     }
 
@@ -235,8 +236,7 @@ public class DataManager {
         JSONObject loadedJSONObject = new JSONObject(response);
         JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
 
-        // CALCULATE TOTAL SCORE BEFORE CREATING NEW ENTRY.
-
+        // Calculate total score before creating a new entry.
         int totalScore = calculateScore(context);
         Log.d(TAG, "Total score: " + totalScore);
 
@@ -302,7 +302,7 @@ public class DataManager {
         ArrayList<String> requestedValues = new ArrayList<>();
 
         // Get review data.
-        // STREAMLINE THIS PROSES IN THE LONG RUN.
+        // STREAMLINE THIS MONSTER IN THE LONG RUN.
         try {
             for (int i = 1; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);

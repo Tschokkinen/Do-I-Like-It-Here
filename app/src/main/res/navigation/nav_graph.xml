@@ -35,7 +35,20 @@
             app:destination="@id/SelectionFragment" />
         <action
             android:id="@+id/action_ReviewFragment_to_displayReviewScore"
-            app:destination="@id/displayReviewScore" />
+            app:destination="@id/DisplayReviewScoreFragment"
+            app:popUpTo="@id/ReviewFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/DisplayReviewScoreFragment"
+        android:name="com.example.doilikeithere.DisplayReviewScore"
+        android:label="Review score"
+        tools:layout="@layout/fragment_display_review_score" >
+        <action
+            android:id="@+id/action_DisplayReviewScoreFragment_to_MainPageFragment"
+            app:destination="@id/MainPageFragment"
+            app:popUpTo="@id/MainPageFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/SelectionFragment"
@@ -68,17 +81,6 @@
             android:id="@+id/action_SettingsFragment_to_MainPageFragment"
             app:destination="@id/MainPageFragment"
             app:popUpTo="@+id/MainPageFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/displayReviewScore"
-        android:name="com.example.doilikeithere.DisplayReviewScore"
-        android:label="fragment_display_review_score"
-        tools:layout="@layout/fragment_display_review_score" >
-        <action
-            android:id="@+id/action_displayReviewScore_to_MainPageFragment"
-            app:destination="@id/MainPageFragment"
-            app:popUpTo="@id/MainPageFragment"
             app:popUpToInclusive="true"/>
     </fragment>
 
