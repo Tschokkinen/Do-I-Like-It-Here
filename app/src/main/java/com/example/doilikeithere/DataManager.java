@@ -15,7 +15,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class DataManager {
@@ -25,21 +27,33 @@ public class DataManager {
         TEMP_NEGATIVES,
         TEMP_FEELINGS
     }
+
+    // Database filename.
     static final String FileName = "Database";
+
+    // Log.d TAG.
     private static final String TAG = "DataManager";
 
+    // Latest review score.
     public static int latestReviewScore = 0;
-    public static String location = "";
+
+    //Temp arrays used when user is making a review.
     public static ArrayList<String> tempPositives = new ArrayList<>();
     public static ArrayList<String> tempNegatives = new ArrayList<>();
     public static ArrayList<String> tempFeelings = new ArrayList<>();
+
+    // Location concerning the review.
+    public static String location = "";
+
+    // Selected items from the recycler view.
     public static ArrayList<String> selected = new ArrayList<>();
-    public static String[] jsonArrayNames = { "Positives", "Negatives", "Feelings" };
-    public static ArrayList<ArrayList> tempArrays = new ArrayList<ArrayList>() {
+
+    // Used when calculating the review score.
+    private static Map<String, ArrayList<String>> tempArrays = new HashMap<String, ArrayList<String>>() {
         {
-            add(tempPositives);
-            add(tempNegatives);
-            add(tempFeelings);
+            put("Positives", tempPositives);
+            put("Negatives", tempNegatives);
+            put("Feelings", tempFeelings);
         }
     };
 
@@ -68,53 +82,19 @@ public class DataManager {
         location = "";
     }
 
-    // DO THIS A SMARTER WAY.
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
         Log.d(TAG, "Initialize database");
-        File file = new File(context.getFilesDir(), FileName);
 
-        if (!file.exists()) {
-            Log.d(TAG, "File doesn't exist.");
-            String[] jsonArrayNames = {"Positives", "Negatives", "Feelings", "Reviews"};
-            JSONObject newDatabase = new JSONObject();
+        String[] jsonArrayNames = {"Positives", "Negatives", "Feelings", "Reviews"};
+        JSONObject newDatabase = new JSONObject();
 
-            // Initialize Positives, Negatives, and Feelings arrays.
-            for(int i = 0; i < jsonArrayNames.length-1; i++) {
-                JSONObject jsonObject = new JSONObject();
-
-                // Values used for testing. REMOVE when testing done.
-                try {
-                    jsonObject.put("Name", "None");
-                    jsonObject.put("Weight", 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                JSONArray jsonArray = new JSONArray();
-                jsonArray.put(jsonObject);
-
-                newDatabase.put((String) Objects.requireNonNull(Array.get(jsonArrayNames, i)), jsonArray);
-            }
-            // Initialize Reviews array.
-            {
-                JSONObject jsonObject = new JSONObject();
-
-                try {
-                    jsonObject.put("Location", "None");
-                    jsonObject.put("Positives", "None");
-                    jsonObject.put("Negatives", "None");
-                    jsonObject.put("Feelings", "None");
-                    jsonObject.put("Total score", 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                JSONArray jsonArray = new JSONArray();
-                jsonArray.put(jsonObject);
-                String nameOfLastArrayElement = jsonArrayNames[jsonArrayNames.length-1];
-                newDatabase.put(nameOfLastArrayElement, jsonArray);
-            }
-            writeFile(context, newDatabase.toString());
+        // Initialize Positives, Negatives, Feelings, and Reviews arrays.
+        for(int i = 0; i < jsonArrayNames.length; i++) {
+            JSONArray jsonArray = new JSONArray();
+            newDatabase.put((String) Objects.requireNonNull(Array.get(jsonArrayNames, i)), jsonArray);
         }
+        writeFile(context, newDatabase.toString());
     }
 
     // Read file.
@@ -124,10 +104,6 @@ public class DataManager {
             Log.d(TAG, "File doesn't exist.");
             initializeDatabase(context);
             file = new File(context.getFilesDir(), FileName);
-        }
-        if (!file.exists()) {
-            Log.d(TAG, "File doesn't exist.");
-            writeFile(context, "");
         }
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -164,9 +140,11 @@ public class DataManager {
         JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
 
         // Check if item with the same name already exists.
-        for (int i = 0; i < jsonArray.length(); i++) {
-            if (jsonArray.getJSONObject(i).getString("Name").equals(nameValue)) {
-                return;
+        if (jsonArray.length() > 0) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (jsonArray.getJSONObject(i).getString("Name").equals(nameValue)) {
+                    return;
+                }
             }
         }
 
@@ -195,23 +173,20 @@ public class DataManager {
         // Put response string to JSONObject and get array according to arrayName parameter.
         JSONObject jsonObject = new JSONObject(response);
 
-        // Get current JsonArray name (Positives, Negatives, Feelings).
-        for (String arrayName : jsonArrayNames) {
-            JSONArray jsonArray = jsonObject.getJSONArray(arrayName);
-            // Get tempArray that corresponds with JsonArray name
-            // (tempPositives, tempNegatives, tempFeelings).
-            for (ArrayList tempArray : tempArrays) {
-                // Get Weight of each temp item.
-                // Ignore multiple entries with same name by breaking loop after first one is found.
-                for (Object s : tempArray) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject current = jsonArray.getJSONObject(i);
-                        if (current.getString("Name").equals(s)) {
-                            int value = current.getInt("Weight");
-                            Log.d(TAG, "Value of calculate total score " + value);
-                            totalScore += value;
-                            break;
-                        }
+        // Get current JsonArray name (Positives, Negatives, Feelings) and corresponding tempArrayList.
+        // Then get Weight of each temp item.
+        // Ignore multiple entries with same name by breaking loop after first one is found.
+        for (Map.Entry<String, ArrayList<String>> entry : tempArrays.entrySet()) {
+            JSONArray jsonArray = jsonObject.getJSONArray(entry.getKey());
+            for (String s : entry.getValue()) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject current = jsonArray.getJSONObject(i);
+                    Log.d(TAG, current.getString("Name"));
+                    if (current.getString("Name").equals(s)) {
+                        int value = current.getInt("Weight");
+                        Log.d(TAG, "Value of current Weight " + value);
+                        totalScore += value;
+                        break;
                     }
                 }
             }
@@ -275,11 +250,8 @@ public class DataManager {
         ArrayList<String> requestedValues = new ArrayList<>();
 
         // Get values by key "Name".
-        // Start index from 1 to exclude empty initialization value.
-        // Fix file initialization in the long run so that the initialization value gets
-        // overwritten by the first addNewItem object. :)
         try {
-            for (int i = 1; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
                 Log.d(TAG, jsonTemp.getString("Name"));
                 requestedValues.add(jsonTemp.getString("Name"));

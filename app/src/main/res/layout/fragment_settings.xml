@@ -82,4 +82,17 @@
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemWeight_editText" />
+
+    <TextView
+        android:background="@color/cardview_shadow_start_color"
+        android:layout_width="300sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32sp"
+        android:layout_marginEnd="100sp"
+        android:layout_marginStart="100sp"
+        android:textAlignment="center"
+        android:text="If selection is Negative the Weight will be converted to a negative value automatically. Feeling can have either positive or negative Weight (e.g. -10)."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saveButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
