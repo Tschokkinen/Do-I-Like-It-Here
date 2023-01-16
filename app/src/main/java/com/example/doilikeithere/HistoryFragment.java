@@ -3,10 +3,13 @@ package com.example.doilikeithere;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +22,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
-
+    private String TAG = "HistoryFragment";
     private FragmentHistoryBinding binding;
 
-    protected ArrayList<String> recyclerViewItems = new ArrayList<>();
+    protected ArrayList<ReviewItem> recyclerViewItems = new ArrayList<>();
 
     protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
     protected HistoryRecyclerAdapter historyRecyclerAdapter;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,12 +56,17 @@ public class HistoryFragment extends Fragment {
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
 
-        setRecyclerViewLayoutManager();
+        historyRecyclerAdapter = new HistoryRecyclerAdapter(recyclerViewItems, getContext());
 
-        historyRecyclerAdapter = new HistoryRecyclerAdapter(recyclerViewItems);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), RecyclerView.VERTICAL);
+        binding.recyclerView.addItemDecoration(dividerItemDecoration);
+
         // Set RecyclerAdapter as the adapter for RecyclerView.
         recyclerView.setAdapter(historyRecyclerAdapter);
-
+        setRecyclerViewLayoutManager();
+        //  Set List layout.
+        //this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        Log.d(TAG, "onCreateView finished.");
         return binding.getRoot();
     }
 

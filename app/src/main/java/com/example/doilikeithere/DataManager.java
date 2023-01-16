@@ -263,7 +263,7 @@ public class DataManager {
         return requestedValues;
     }
 
-    public static ArrayList<String> loadReviewsRecyclerviewItems(Context context)
+    public static ArrayList<ReviewItem> loadReviewsRecyclerviewItems(Context context)
             throws JSONException, IOException {
         String response = readFile(context);
 
@@ -271,30 +271,37 @@ public class DataManager {
         JSONArray jsonArray = jsonObject.getJSONArray("Reviews");
 
         // Array for requested values.
-        ArrayList<String> requestedValues = new ArrayList<>();
+        ArrayList<ReviewItem> requestedValues = new ArrayList<>();
 
         // Get review data.
-        // STREAMLINE THIS MONSTER IN THE LONG RUN.
         try {
             for (int i = 1; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
                 //Log.d("DataManager", jsonTemp.getString("Location"));
-                String result = "";
-                result += "Location: ";
-                result += jsonTemp.getString("Location");
-                result += " ";
-                result += "Positives: ";
-                result += jsonTemp.getString("Positives");
-                result += " ";
-                result += "Negatives: ";
-                result += jsonTemp.getString("Negatives");
-                result += " ";
-                result += "Feelings: ";
-                result += jsonTemp.getString("Feelings");
-                result += " ";
-                result += "Total score: ";
-                result += jsonTemp.getString("Total score");
-                requestedValues.add(result);
+                ReviewItem reviewItem = new ReviewItem(
+                        jsonTemp.getString("Location"),
+                        jsonTemp.getString("Positives"),
+                        jsonTemp.getString("Negatives"),
+                        jsonTemp.getString("Feelings"),
+                        Integer.parseInt(jsonTemp.getString("Total score"))
+                );
+//                String result = "";
+//                result += "Location: ";
+//                result += jsonTemp.getString("Location");
+//                result += " ";
+//                result += "Positives: ";
+//                result += jsonTemp.getString("Positives");
+//                result += " ";
+//                result += "Negatives: ";
+//                result += jsonTemp.getString("Negatives");
+//                result += " ";
+//                result += "Feelings: ";
+//                result += jsonTemp.getString("Feelings");
+//                result += " ";
+//                result += "Total score: ";
+//                result += jsonTemp.getString("Total score");
+                Log.d(TAG, reviewItem.location.toString());
+                requestedValues.add(reviewItem);
             }
         } catch (JSONException e) {
             e.printStackTrace();
