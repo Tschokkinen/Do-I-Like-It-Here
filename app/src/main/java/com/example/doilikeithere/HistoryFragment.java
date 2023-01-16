@@ -63,9 +63,9 @@ public class HistoryFragment extends Fragment {
 
         // Set RecyclerAdapter as the adapter for RecyclerView.
         recyclerView.setAdapter(historyRecyclerAdapter);
-        //setRecyclerViewLayoutManager();
+        setRecyclerViewLayoutManager();
         //  Set List layout.
-        this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Log.d(TAG, "onCreateView finished.");
         return binding.getRoot();
     }
@@ -75,20 +75,17 @@ public class HistoryFragment extends Fragment {
 
     }
 
-//    private void setRecyclerViewLayoutManager() {
-////        int scrollPosition = 0;
-////
-////        if (recyclerView.getLayoutManager() != null) {
-////            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
-////                    .findFirstCompletelyVisibleItemPosition();
-////        }
-////
-////        recyclerView.setLayoutManager(layoutManager);
-////        recyclerView.scrollToPosition(scrollPosition);
-//
-//        //  Set List layout.
-//        this.binding.painHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//    }
+    private void setRecyclerViewLayoutManager() {
+        int scrollPosition = 0;
+
+        if (recyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.scrollToPosition(scrollPosition);
+    }
 
     private void getRecyclerViewData() throws IOException, JSONException {
         // Get data for recyclerview.
