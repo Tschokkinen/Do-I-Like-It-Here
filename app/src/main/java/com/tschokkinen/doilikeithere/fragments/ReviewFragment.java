@@ -1,4 +1,4 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.fragments;
 
 import org.json.JSONException;
 
@@ -10,11 +10,11 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.doilikeithere.databinding.FragmentReviewBinding;
+import com.tschokkinen.doilikeithere.database.DataManager;
+import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.databinding.FragmentReviewBinding;
 
 import java.io.IOException;
 

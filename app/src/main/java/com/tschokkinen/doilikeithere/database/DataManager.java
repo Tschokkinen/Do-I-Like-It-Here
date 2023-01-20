@@ -1,7 +1,9 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.database;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.tschokkinen.doilikeithere.models.ReviewItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,9 +16,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -222,6 +227,7 @@ public class DataManager {
             jsonObject.put("Negatives", negativesListString);
             jsonObject.put("Feelings", feelingsListString);
             jsonObject.put("Total score", totalScore);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -272,6 +278,7 @@ public class DataManager {
 
         // Array for requested values.
         ArrayList<ReviewItem> requestedValues = new ArrayList<>();
+        Date date;
 
         // Get review data.
         try {
@@ -284,22 +291,8 @@ public class DataManager {
                         jsonTemp.getString("Negatives"),
                         jsonTemp.getString("Feelings"),
                         Integer.parseInt(jsonTemp.getString("Total score"))
+
                 );
-//                String result = "";
-//                result += "Location: ";
-//                result += jsonTemp.getString("Location");
-//                result += " ";
-//                result += "Positives: ";
-//                result += jsonTemp.getString("Positives");
-//                result += " ";
-//                result += "Negatives: ";
-//                result += jsonTemp.getString("Negatives");
-//                result += " ";
-//                result += "Feelings: ";
-//                result += jsonTemp.getString("Feelings");
-//                result += " ";
-//                result += "Total score: ";
-//                result += jsonTemp.getString("Total score");
                 Log.d(TAG, reviewItem.location.toString());
                 requestedValues.add(reviewItem);
             }
@@ -312,3 +305,5 @@ public class DataManager {
         return requestedValues;
     }
 }
+//date = new SimpleDateFormat("dd/MM/yyyy").parse(jsonTemp.getString("Date"))
+//jsonObject.put("Date", Calendar.getInstance().getTime().toString());

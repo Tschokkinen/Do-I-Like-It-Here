@@ -1,4 +1,4 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere;
 
 import org.junit.Test;
 

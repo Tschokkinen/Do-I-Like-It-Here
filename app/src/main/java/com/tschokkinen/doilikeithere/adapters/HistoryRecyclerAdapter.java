@@ -1,15 +1,14 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.doilikeithere.databinding.HistoryRowItemBinding;
+import com.tschokkinen.doilikeithere.viewholders.HistoryViewHolder;
+import com.tschokkinen.doilikeithere.models.ReviewItem;
+import com.tschokkinen.doilikeithere.databinding.HistoryRowItemBinding;
 
 import java.util.ArrayList;
 

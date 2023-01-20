@@ -1,19 +1,19 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.fragments;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.tschokkinen.doilikeithere.database.DataManager;
+import com.tschokkinen.doilikeithere.R;
 
-public class DisplayReviewScore extends Fragment {
+public class DisplayReviewScoreFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

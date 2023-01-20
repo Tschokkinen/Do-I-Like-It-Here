@@ -1,14 +1,16 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.tschokkinen.doilikeithere.database.DataManager;
+import com.tschokkinen.doilikeithere.R;
 
 import java.util.ArrayList;
 

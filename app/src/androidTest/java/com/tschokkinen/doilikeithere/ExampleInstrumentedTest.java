@@ -1,4 +1,4 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere;
 
 import android.content.Context;
 
