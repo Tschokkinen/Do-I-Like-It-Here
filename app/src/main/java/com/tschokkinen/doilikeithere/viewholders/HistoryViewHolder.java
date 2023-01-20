@@ -25,7 +25,7 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
         this.binding.location.setText(reviewItem.location);
 
         // Set date
-//        this.binding.dateAndTime.setText(reviewItem.date.toString());
+        //this.binding.dateAndTime.setText(reviewItem.date.toString());
 
         // Set positives data.
         this.binding.positives.setText(reviewItem.positives);

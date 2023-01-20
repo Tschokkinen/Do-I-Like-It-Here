@@ -1,7 +1,11 @@
 package com.tschokkinen.doilikeithere.database;
 
 import android.content.Context;
+import android.icu.util.LocaleData;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.tschokkinen.doilikeithere.models.ReviewItem;
 
@@ -18,6 +22,10 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -203,6 +211,7 @@ public class DataManager {
     }
 
     // Add a new place review into the database.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
         // Read file and convert to string.
         String response = readFile(context);
@@ -227,7 +236,6 @@ public class DataManager {
             jsonObject.put("Negatives", negativesListString);
             jsonObject.put("Feelings", feelingsListString);
             jsonObject.put("Total score", totalScore);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -278,22 +286,19 @@ public class DataManager {
 
         // Array for requested values.
         ArrayList<ReviewItem> requestedValues = new ArrayList<>();
-        Date date;
 
         // Get review data.
         try {
-            for (int i = 1; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
-                //Log.d("DataManager", jsonTemp.getString("Location"));
                 ReviewItem reviewItem = new ReviewItem(
                         jsonTemp.getString("Location"),
                         jsonTemp.getString("Positives"),
                         jsonTemp.getString("Negatives"),
                         jsonTemp.getString("Feelings"),
                         Integer.parseInt(jsonTemp.getString("Total score"))
-
                 );
-                Log.d(TAG, reviewItem.location.toString());
+                Log.d(TAG, "Review item location: " + reviewItem.location);
                 requestedValues.add(reviewItem);
             }
         } catch (JSONException e) {
@@ -307,3 +312,4 @@ public class DataManager {
 }
 //date = new SimpleDateFormat("dd/MM/yyyy").parse(jsonTemp.getString("Date"))
 //jsonObject.put("Date", Calendar.getInstance().getTime().toString());
+//jsonTemp.getString("Date")
