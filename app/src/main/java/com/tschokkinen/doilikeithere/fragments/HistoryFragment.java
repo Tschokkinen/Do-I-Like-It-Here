@@ -1,9 +1,8 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.fragments;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,7 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.doilikeithere.databinding.FragmentHistoryBinding;
+import com.tschokkinen.doilikeithere.database.DataManager;
+import com.tschokkinen.doilikeithere.adapters.HistoryRecyclerAdapter;
+import com.tschokkinen.doilikeithere.models.ReviewItem;
+import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.databinding.FragmentHistoryBinding;
 
 import org.json.JSONException;
 

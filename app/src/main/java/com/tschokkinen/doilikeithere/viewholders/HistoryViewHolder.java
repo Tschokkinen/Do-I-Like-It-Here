@@ -1,13 +1,12 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.viewholders;
 
 import android.content.res.Resources;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.doilikeithere.databinding.HistoryRowItemBinding;
+import com.tschokkinen.doilikeithere.models.ReviewItem;
+import com.tschokkinen.doilikeithere.databinding.HistoryRowItemBinding;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -25,6 +24,9 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
         // Set location data.
         this.binding.location.setText(reviewItem.location);
 
+        // Set date
+        //this.binding.dateAndTime.setText(reviewItem.date.toString());
+
         // Set positives data.
         this.binding.positives.setText(reviewItem.positives);
 
@@ -36,5 +38,7 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
 
         // Set review score data.
         this.binding.score.setText(String.valueOf(reviewItem.score));
+
+        Log.d("HistoryViewHolder", "HEre's some history for ya.");
     }
 }

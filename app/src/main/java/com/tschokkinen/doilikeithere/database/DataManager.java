@@ -1,7 +1,13 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.database;
 
 import android.content.Context;
+import android.icu.util.LocaleData;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
+import com.tschokkinen.doilikeithere.models.ReviewItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,9 +20,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -198,6 +211,7 @@ public class DataManager {
     }
 
     // Add a new place review into the database.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
         // Read file and convert to string.
         String response = readFile(context);
@@ -275,9 +289,8 @@ public class DataManager {
 
         // Get review data.
         try {
-            for (int i = 1; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
-                //Log.d("DataManager", jsonTemp.getString("Location"));
                 ReviewItem reviewItem = new ReviewItem(
                         jsonTemp.getString("Location"),
                         jsonTemp.getString("Positives"),
@@ -285,22 +298,7 @@ public class DataManager {
                         jsonTemp.getString("Feelings"),
                         Integer.parseInt(jsonTemp.getString("Total score"))
                 );
-//                String result = "";
-//                result += "Location: ";
-//                result += jsonTemp.getString("Location");
-//                result += " ";
-//                result += "Positives: ";
-//                result += jsonTemp.getString("Positives");
-//                result += " ";
-//                result += "Negatives: ";
-//                result += jsonTemp.getString("Negatives");
-//                result += " ";
-//                result += "Feelings: ";
-//                result += jsonTemp.getString("Feelings");
-//                result += " ";
-//                result += "Total score: ";
-//                result += jsonTemp.getString("Total score");
-                Log.d(TAG, reviewItem.location.toString());
+                Log.d(TAG, "Review item location: " + reviewItem.location);
                 requestedValues.add(reviewItem);
             }
         } catch (JSONException e) {
@@ -312,3 +310,6 @@ public class DataManager {
         return requestedValues;
     }
 }
+//date = new SimpleDateFormat("dd/MM/yyyy").parse(jsonTemp.getString("Date"))
+//jsonObject.put("Date", Calendar.getInstance().getTime().toString());
+//jsonTemp.getString("Date")

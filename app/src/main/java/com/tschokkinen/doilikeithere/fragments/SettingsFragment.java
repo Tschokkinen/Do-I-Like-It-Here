@@ -1,4 +1,4 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.fragments;
 
 import android.os.Bundle;
 
@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.doilikeithere.databinding.FragmentSettingsBinding;
+import com.tschokkinen.doilikeithere.database.DataManager;
+import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.databinding.FragmentSettingsBinding;
 
 import org.json.JSONException;
 

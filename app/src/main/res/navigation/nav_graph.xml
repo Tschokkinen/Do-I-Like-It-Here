@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/MainPageFragment"
-        android:name="com.example.doilikeithere.MainPageFragment"
+        android:name="com.tschokkinen.doilikeithere.fragments.MainPageFragment"
         android:label="@string/fragment_title_main_page"
         tools:layout="@layout/fragment_main_page">
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/ReviewFragment"
-        android:name="com.example.doilikeithere.ReviewFragment"
+        android:name="com.tschokkinen.doilikeithere.fragments.ReviewFragment"
         android:label="@string/fragment_title_review_place"
         tools:layout="@layout/fragment_review">
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/DisplayReviewScoreFragment"
-        android:name="com.example.doilikeithere.DisplayReviewScore"
+        android:name="com.tschokkinen.doilikeithere.fragments.DisplayReviewScoreFragment"
         android:label="Review score"
         tools:layout="@layout/fragment_display_review_score" >
         <action
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/SelectionFragment"
-        android:name="com.example.doilikeithere.SelectionFragment"
+        android:name="com.tschokkinen.doilikeithere.fragments.SelectionFragment"
         android:label="@string/fragment_title_make_selections"
         tools:layout="@layout/fragment_selection">
         <action
@@ -63,7 +63,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.doilikeithere.HistoryFragment"
+        android:name="com.tschokkinen.doilikeithere.fragments.HistoryFragment"
         android:label="History"
         tools:layout="@layout/fragment_history">
         <action
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.doilikeithere.SettingsFragment"
+        android:name="com.tschokkinen.doilikeithere.fragments.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" >
         <action

@@ -1,4 +1,4 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.doilikeithere.databinding.FragmentMainPageBinding;
+import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.databinding.FragmentMainPageBinding;
 
 public class MainPageFragment extends Fragment {
 

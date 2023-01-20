@@ -1,23 +1,22 @@
-package com.example.doilikeithere;
+package com.tschokkinen.doilikeithere.fragments;
 
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.doilikeithere.databinding.FragmentSelectionBinding;
+import com.tschokkinen.doilikeithere.database.DataManager;
+import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.adapters.SelectionRecyclerAdapter;
+import com.tschokkinen.doilikeithere.databinding.FragmentSelectionBinding;
 
 import org.json.JSONException;
 
