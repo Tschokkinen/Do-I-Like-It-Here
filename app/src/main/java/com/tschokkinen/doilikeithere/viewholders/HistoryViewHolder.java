@@ -5,12 +5,9 @@ import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tschokkinen.doilikeithere.DateFormatters;
 import com.tschokkinen.doilikeithere.models.ReviewItem;
 import com.tschokkinen.doilikeithere.databinding.HistoryRowItemBinding;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 public class HistoryViewHolder extends RecyclerView.ViewHolder {
     private final HistoryRowItemBinding binding;
@@ -25,7 +22,7 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
         this.binding.location.setText(reviewItem.location);
 
         // Set date
-        //this.binding.dateAndTime.setText(reviewItem.date.toString());
+        this.binding.dateAndTime.setText(DateFormatters.sdfDMY.format(reviewItem.date));
 
         // Set positives data.
         this.binding.positives.setText(reviewItem.positives);
