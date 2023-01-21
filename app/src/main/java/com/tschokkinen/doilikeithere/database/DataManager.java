@@ -1,12 +1,12 @@
 package com.tschokkinen.doilikeithere.database;
 
 import android.content.Context;
-import android.icu.util.LocaleData;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.tschokkinen.doilikeithere.DateFormatters;
 import com.tschokkinen.doilikeithere.models.ReviewItem;
 
 import org.json.JSONArray;
@@ -21,13 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +56,8 @@ public class DataManager {
     public static ArrayList<String> selected = new ArrayList<>();
 
     // Used when calculating the review score.
-    private static Map<String, ArrayList<String>> tempArrays = new HashMap<String, ArrayList<String>>() {
+    private static final Map<String, ArrayList<String>> tempArrays =
+            new HashMap<String, ArrayList<String>>() {
         {
             put("Positives", tempPositives);
             put("Negatives", tempNegatives);
@@ -194,10 +189,10 @@ public class DataManager {
             for (String s : entry.getValue()) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject current = jsonArray.getJSONObject(i);
-                    Log.d(TAG, current.getString("Name"));
+                    //Log.d(TAG, current.getString("Name"));
                     if (current.getString("Name").equals(s)) {
                         int value = current.getInt("Weight");
-                        Log.d(TAG, "Value of current Weight " + value);
+                        //Log.d(TAG, "Value of current Weight " + value);
                         totalScore += value;
                         break;
                     }
@@ -205,7 +200,7 @@ public class DataManager {
             }
         } // Not the most elegant solution with tons of nesting, but works for now. :)
 
-        Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
+        //Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
         latestReviewScore = totalScore;
         return totalScore;
     }
@@ -227,7 +222,12 @@ public class DataManager {
 
         // Calculate total score before creating a new entry.
         int totalScore = calculateScore(context);
-        Log.d(TAG, "Total score: " + totalScore);
+        //Log.d(TAG, "Total score: " + totalScore);
+
+        // Get current date.
+        Date date = new Date();
+        String dateAsString = DateFormatters.sdfCompleteDate.format(date);
+        //Log.d(TAG, "DateAsString: " + dateAsString);
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -236,6 +236,7 @@ public class DataManager {
             jsonObject.put("Negatives", negativesListString);
             jsonObject.put("Feelings", feelingsListString);
             jsonObject.put("Total score", totalScore);
+            jsonObject.put("Date", dateAsString);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -277,8 +278,9 @@ public class DataManager {
         return requestedValues;
     }
 
+    // Load reviews from JSON file.
     public static ArrayList<ReviewItem> loadReviewsRecyclerviewItems(Context context)
-            throws JSONException, IOException {
+            throws JSONException, IOException, ParseException {
         String response = readFile(context);
 
         JSONObject jsonObject = new JSONObject(response);
@@ -287,18 +289,21 @@ public class DataManager {
         // Array for requested values.
         ArrayList<ReviewItem> requestedValues = new ArrayList<>();
 
+
         // Get review data.
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
+                Date date = DateFormatters.sdfCompleteDate.parse(jsonTemp.getString("Date"));
+                //Log.d(TAG, "Parsed date: " + date);
                 ReviewItem reviewItem = new ReviewItem(
                         jsonTemp.getString("Location"),
                         jsonTemp.getString("Positives"),
                         jsonTemp.getString("Negatives"),
                         jsonTemp.getString("Feelings"),
-                        Integer.parseInt(jsonTemp.getString("Total score"))
+                        Integer.parseInt(jsonTemp.getString("Total score")),
+                        date
                 );
-                Log.d(TAG, "Review item location: " + reviewItem.location);
                 requestedValues.add(reviewItem);
             }
         } catch (JSONException e) {
@@ -310,6 +315,3 @@ public class DataManager {
         return requestedValues;
     }
 }
-//date = new SimpleDateFormat("dd/MM/yyyy").parse(jsonTemp.getString("Date"))
-//jsonObject.put("Date", Calendar.getInstance().getTime().toString());
-//jsonTemp.getString("Date")

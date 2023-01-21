@@ -22,10 +22,11 @@ import com.tschokkinen.doilikeithere.databinding.FragmentHistoryBinding;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
-    private String TAG = "HistoryFragment";
+    private final String TAG = "HistoryFragment";
     private FragmentHistoryBinding binding;
 
     protected ArrayList<ReviewItem> recyclerViewItems = new ArrayList<>();
@@ -44,6 +45,8 @@ public class HistoryFragment extends Fragment {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -54,7 +57,7 @@ public class HistoryFragment extends Fragment {
         binding.getRoot();
 
         // Get RecyclerView
-        recyclerView = (RecyclerView) binding.getRoot().findViewById(R.id.recyclerView);
+        recyclerView = binding.getRoot().findViewById(R.id.recyclerView);
 
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
@@ -90,7 +93,7 @@ public class HistoryFragment extends Fragment {
         recyclerView.scrollToPosition(scrollPosition);
     }
 
-    private void getRecyclerViewData() throws IOException, JSONException {
+    private void getRecyclerViewData() throws IOException, JSONException, ParseException {
         // Get data for recyclerview.
         recyclerViewItems = DataManager.loadReviewsRecyclerviewItems(getContext());
     }
