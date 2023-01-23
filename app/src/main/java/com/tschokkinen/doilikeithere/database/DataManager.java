@@ -136,6 +136,22 @@ public class DataManager {
         Log.d(TAG, "writeFile: userString " + userString);
     }
 
+    // Empty reviewsArray by replace existing array with an empty array.
+    public static void emptyReviewsDatabase(Context context) throws JSONException, IOException {
+        // Read file and convert to string.
+        String response = readFile(context);
+
+        // Convert response to a JSON object.
+        JSONObject loadedJSONObject = new JSONObject(response);
+
+        // Create an empty JSONArray and put in loaded JSON object.
+        JSONArray emptyJSONArray = new JSONArray();
+        loadedJSONObject.put("Reviews", emptyJSONArray);
+
+        // Write JSON object back into the file.
+        writeFile(context, loadedJSONObject.toString());
+    }
+
     // Add new item to (positive, negative, or feeling) JSON file.
     // arrayName can be "positive", "negative", or "feelings".
     public static void addNewItem(Context context, String arrayName, String nameValue,

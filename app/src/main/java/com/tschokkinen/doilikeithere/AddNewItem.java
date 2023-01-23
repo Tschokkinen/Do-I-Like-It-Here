@@ -1,4 +1,4 @@
-package com.tschokkinen.doilikeithere.fragments;
+package com.tschokkinen.doilikeithere;
 
 import android.os.Bundle;
 
@@ -15,23 +15,22 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.tschokkinen.doilikeithere.database.DataManager;
-import com.tschokkinen.doilikeithere.R;
-import com.tschokkinen.doilikeithere.databinding.FragmentSettingsBinding;
+import com.tschokkinen.doilikeithere.databinding.FragmentAddNewItemBinding;
+import com.tschokkinen.doilikeithere.fragments.SettingsFragment;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link AddNewItem#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class AddNewItem extends Fragment {
 
     private String TAG = "SettingsFragment";
-    private FragmentSettingsBinding binding;
+    private FragmentAddNewItemBinding binding;
     private RadioGroup radioGroup;
     private String arrayName = "";
 
@@ -44,7 +43,7 @@ public class SettingsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public SettingsFragment() {
+    public AddNewItem() {
         // Required empty public constructor
     }
 
@@ -73,13 +72,16 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        binding = FragmentAddNewItemBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -87,25 +89,44 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.addItem.setOnClickListener(new View.OnClickListener() {
+        radioGroup = (RadioGroup) getView().findViewById(R.id.radioGroup);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SettingsFragment.this)
-                        .navigate(R.id.action_settingsFragment_to_addNewItem);
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                RadioButton radioButton = getView().findViewById(i);
+                //Log.d(TAG, radioButton.getText().toString());
+                // Get arrayName by radio button selection.
+                arrayName = radioButton.getTag().toString();
             }
         });
 
-        binding.emptyReviewsDatabase.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               try {
-                   DataManager.emptyReviewsDatabase(getContext());
-               } catch (JSONException e) {
-                   e.printStackTrace();
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-           }
+        binding.saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText itemName_editText = getView().findViewById(R.id.itemName_editText);
+                String nameValue = itemName_editText.getText().toString();
+
+                EditText itemWeight_editText = getView().findViewById(R.id.itemWeight_editText);
+                int itemWeight = Integer.parseInt(itemWeight_editText.getText().toString());
+                Log.d("SettingsFragment", String.valueOf(itemWeight));
+
+                // If user entered positive value for a negative attribute, convert value to negative.
+                if (arrayName.equals("Negatives") && itemWeight > 0) {
+                    itemWeight = (-itemWeight);
+                    //Log.d(TAG, "Converted int " + itemWeight);
+                }
+
+                if (!arrayName.isEmpty() && !nameValue.isEmpty()) {
+                    try {
+                        DataManager.addNewItem(getContext(), arrayName, nameValue, itemWeight);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         });
     }
 

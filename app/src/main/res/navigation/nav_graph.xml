@@ -82,6 +82,17 @@
             app:destination="@id/MainPageFragment"
             app:popUpTo="@+id/MainPageFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_settingsFragment_to_addNewItem"
+            app:destination="@id/addNewItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewItem"
+        android:name="com.tschokkinen.doilikeithere.AddNewItem"
+        android:label="AddNewItem" >
+        <action
+            android:id="@+id/action_addNewItem_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
 
