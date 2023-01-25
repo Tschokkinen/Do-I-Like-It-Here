@@ -1,8 +1,10 @@
 package com.tschokkinen.doilikeithere.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.tschokkinen.doilikeithere.Alert;
 import com.tschokkinen.doilikeithere.database.DataManager;
 import com.tschokkinen.doilikeithere.R;
 import com.tschokkinen.doilikeithere.databinding.FragmentSettingsBinding;
@@ -98,13 +101,8 @@ public class SettingsFragment extends Fragment {
         binding.emptyReviewsDatabase.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               try {
-                   DataManager.emptyReviewsDatabase(getContext());
-               } catch (JSONException e) {
-                   e.printStackTrace();
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
+               DialogFragment alert = new Alert();
+               alert.show(getParentFragmentManager(),"Empty reviews");
            }
         });
     }

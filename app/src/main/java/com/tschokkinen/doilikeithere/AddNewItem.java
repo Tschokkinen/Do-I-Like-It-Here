@@ -115,6 +115,8 @@ public class AddNewItem extends Fragment {
                 if (arrayName.equals("Negatives") && itemWeight > 0) {
                     itemWeight = (-itemWeight);
                     //Log.d(TAG, "Converted int " + itemWeight);
+                } else if (arrayName.equals("Positives") && itemWeight < 0) {
+                    itemWeight *= (-1);
                 }
 
                 if (!arrayName.isEmpty() && !nameValue.isEmpty()) {
