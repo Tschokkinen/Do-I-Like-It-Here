@@ -6,7 +6,7 @@ Platform: Android
 
 IDE: Android Studio
 
-Other notes: Work still in progress. :) The project will be updated during 2023.
+Other notes: Work still in progress. :) The project will be updated and improved during 2023.
 
 ------
 
