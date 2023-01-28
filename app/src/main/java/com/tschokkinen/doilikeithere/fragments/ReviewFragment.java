@@ -21,8 +21,8 @@ import java.io.IOException;
 public class ReviewFragment extends Fragment {
 
     private FragmentReviewBinding binding;
-    private EditText location_editText;
-    private String fromMainPageFragment;
+//    private EditText location_editText;
+//    private String fromMainPageFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,12 +42,12 @@ public class ReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        location_editText = (EditText) getView().findViewById(R.id.editTextLocation);
+        //location_editText = (EditText) getView().findViewById(R.id.editTextLocation);
 
         if (!DataManager.location.isEmpty()) {
-            location_editText.setText(DataManager.location);
+            binding.editTextLocation.setText(DataManager.location);
         } else {
-            location_editText.setText("");
+            binding.editTextLocation.setText("");
         }
 
         // Save review to database and go back to the main page (i.e. FirstFragment).
@@ -105,8 +105,8 @@ public class ReviewFragment extends Fragment {
 
     // Check if location has been entered in location_editText field.
     private void checkLocationEditText() {
-        if (!location_editText.getText().toString().isEmpty()) {
-            DataManager.location = location_editText.getText().toString();
+        if (!binding.editTextLocation.getText().toString().isEmpty()) {
+            DataManager.location = binding.editTextLocation.getText().toString();
         }
     }
 

@@ -31,7 +31,7 @@ public class SelectionFragment extends Fragment {
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private String arrayName;
 
-    protected RecyclerView recyclerView;
+//    protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
     protected SelectionRecyclerAdapter selectionRecyclerAdapter;
 
@@ -75,7 +75,7 @@ public class SelectionFragment extends Fragment {
         binding.getRoot();
 
         // Get RecyclerView
-        recyclerView = (RecyclerView) binding.getRoot().findViewById(R.id.recyclerView);
+        //recyclerView = (RecyclerView) binding.getRoot().findViewById(R.id.recyclerView);
 
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
@@ -84,7 +84,7 @@ public class SelectionFragment extends Fragment {
 
         selectionRecyclerAdapter = new SelectionRecyclerAdapter(recyclerViewItems);
         // Set RecyclerAdapter as the adapter for RecyclerView.
-        recyclerView.setAdapter(selectionRecyclerAdapter);
+        binding.recyclerView.setAdapter(selectionRecyclerAdapter);
 
         return binding.getRoot();
     }
@@ -125,13 +125,13 @@ public class SelectionFragment extends Fragment {
     private void setRecyclerViewLayoutManager() {
         int scrollPosition = 0;
 
-        if (recyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+        if (binding.recyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) binding.recyclerView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition();
         }
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.scrollToPosition(scrollPosition);
+        binding.recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.scrollToPosition(scrollPosition);
     }
 
     private void getRecyclerViewData(String arrayName) throws IOException, JSONException {

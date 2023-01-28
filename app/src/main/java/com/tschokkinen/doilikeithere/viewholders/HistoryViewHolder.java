@@ -36,6 +36,6 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
         // Set review score data.
         this.binding.score.setText(String.valueOf(reviewItem.score));
 
-        Log.d("HistoryViewHolder", "HEre's some history for ya.");
+        Log.d("HistoryViewHolder", "Here's some history for ya.");
     }
 }
