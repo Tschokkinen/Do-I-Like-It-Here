@@ -35,6 +35,11 @@ public class DataManager {
         TEMP_FEELINGS
     }
 
+    public enum DeleteCommands {
+        DELETE_ENTIRE_DATABASE,
+        DELETE_REVIEWS
+    }
+
     // Database filename.
     static final String FileName = "Database";
 
@@ -134,6 +139,30 @@ public class DataManager {
         bufferedWriter.write(userString);
         bufferedWriter.close();
         Log.d(TAG, "writeFile: userString " + userString);
+    }
+
+    // Empty reviewsArray by replace existing array with an empty array.
+    public static void deleteFromDatabase(Context context, DeleteCommands command) throws JSONException, IOException {
+        // Read file and convert to string.
+        String response = readFile(context);
+
+        // Convert response to a JSON object.
+        JSONObject loadedJSONObject = new JSONObject(response);
+        // Create an empty JSONArray and put in loaded JSON object.
+        JSONArray emptyJSONArray = new JSONArray();
+
+        if(command == DeleteCommands.DELETE_REVIEWS) {
+            loadedJSONObject.put("Reviews", emptyJSONArray);
+        } else if (command == DeleteCommands.DELETE_ENTIRE_DATABASE) {
+            loadedJSONObject.put("Positives", emptyJSONArray);
+            loadedJSONObject.put("Negatives", emptyJSONArray);
+            loadedJSONObject.put("Feelings", emptyJSONArray);
+            loadedJSONObject.put("Reviews", emptyJSONArray);
+        }
+
+
+        // Write JSON object back into the file.
+        writeFile(context, loadedJSONObject.toString());
     }
 
     // Add new item to (positive, negative, or feeling) JSON file.
