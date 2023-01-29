@@ -2,7 +2,9 @@ package com.tschokkinen.doilikeithere.viewholders;
 
 import android.content.res.Resources;
 import android.util.Log;
+import android.view.View;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tschokkinen.doilikeithere.DateFormatters;
@@ -11,6 +13,10 @@ import com.tschokkinen.doilikeithere.databinding.HistoryRowItemBinding;
 
 public class HistoryViewHolder extends RecyclerView.ViewHolder {
     private final HistoryRowItemBinding binding;
+
+    private String TAG = "HistoryViewHolder";
+
+    private Fragment fragment;
 
     public HistoryViewHolder(HistoryRowItemBinding binding) {
         super(binding.getRoot());

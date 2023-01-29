@@ -37,7 +37,8 @@ public class DataManager {
 
     public enum DeleteCommands {
         DELETE_ENTIRE_DATABASE,
-        DELETE_REVIEWS
+        DELETE_REVIEWS,
+        DELETE_ONE
     }
 
     // Database filename.
@@ -142,22 +143,28 @@ public class DataManager {
     }
 
     // Empty reviewsArray by replace existing array with an empty array.
-    public static void deleteFromDatabase(Context context, DeleteCommands command) throws JSONException, IOException {
+    public static void deleteFromDatabase(Context context, DeleteCommands command, int position) throws JSONException, IOException {
         // Read file and convert to string.
         String response = readFile(context);
 
         // Convert response to a JSON object.
         JSONObject loadedJSONObject = new JSONObject(response);
-        // Create an empty JSONArray and put in loaded JSON object.
-        JSONArray emptyJSONArray = new JSONArray();
 
-        if(command == DeleteCommands.DELETE_REVIEWS) {
+        if(command == DeleteCommands.DELETE_REVIEWS) { // Delete all reviews
+            // Create an empty JSONArray
+            JSONArray emptyJSONArray = new JSONArray();
             loadedJSONObject.put("Reviews", emptyJSONArray);
-        } else if (command == DeleteCommands.DELETE_ENTIRE_DATABASE) {
+        } else if (command == DeleteCommands.DELETE_ENTIRE_DATABASE) { // Delete entire database
+            // Create an empty JSONArray
+            JSONArray emptyJSONArray = new JSONArray();
             loadedJSONObject.put("Positives", emptyJSONArray);
             loadedJSONObject.put("Negatives", emptyJSONArray);
             loadedJSONObject.put("Feelings", emptyJSONArray);
             loadedJSONObject.put("Reviews", emptyJSONArray);
+        } else if (command == DeleteCommands.DELETE_ONE) { // Delete one review
+            JSONArray jsonArray = loadedJSONObject.getJSONArray("Reviews");
+            jsonArray.remove(position);
+            loadedJSONObject.put("Reviews", jsonArray);
         }
 
 

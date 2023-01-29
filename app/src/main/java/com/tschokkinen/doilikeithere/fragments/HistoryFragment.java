@@ -62,7 +62,7 @@ public class HistoryFragment extends Fragment {
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
 
-        historyRecyclerAdapter = new HistoryRecyclerAdapter(recyclerViewItems, getContext());
+        historyRecyclerAdapter = new HistoryRecyclerAdapter(recyclerViewItems, getContext(), this);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), RecyclerView.VERTICAL);
         binding.recyclerView.addItemDecoration(dividerItemDecoration);

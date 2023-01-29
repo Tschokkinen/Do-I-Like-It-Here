@@ -17,9 +17,12 @@ import java.io.IOException;
 public class Alert extends DialogFragment {
     private String message;
     private DataManager.DeleteCommands command;
-    public Alert(String message, DataManager.DeleteCommands command) {
+    private int position;
+
+    public Alert(String message, DataManager.DeleteCommands command, int position) {
         this.message = message;
         this.command = command;
+        this.position = position;
     }
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class Alert extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         // Empty review database.
                         try {
-                            DataManager.deleteFromDatabase(getContext(), command);
+                            DataManager.deleteFromDatabase(getContext(), command, position);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
