@@ -77,11 +77,6 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
-
-        // PART OF A TEST.
-        viewHolder.itemView.setActivated(true);
-
-
         viewHolder.itemView.setSelected(selectedPos == position);
 
         // Replace elements with recyclerViewItems elements.
