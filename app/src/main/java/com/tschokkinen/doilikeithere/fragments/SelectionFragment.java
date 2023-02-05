@@ -17,6 +17,7 @@ import com.tschokkinen.doilikeithere.database.DataManager;
 import com.tschokkinen.doilikeithere.R;
 import com.tschokkinen.doilikeithere.adapters.SelectionRecyclerAdapter;
 import com.tschokkinen.doilikeithere.databinding.FragmentSelectionBinding;
+import com.tschokkinen.doilikeithere.models.SelectionItem;
 
 import org.json.JSONException;
 
@@ -27,7 +28,7 @@ public class SelectionFragment extends Fragment {
     private String TAG = "SelectionFragment";
     private FragmentSelectionBinding binding;
 
-    protected ArrayList<String> recyclerViewItems = new ArrayList<>();
+    protected ArrayList<SelectionItem> recyclerViewItems = new ArrayList<>();
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private String arrayName;
 
@@ -106,7 +107,7 @@ public class SelectionFragment extends Fragment {
                 }
 
                 // Save user selections to empty temp array list.
-                for(String s : DataManager.selected) {
+                for(SelectionItem s : DataManager.selected) {
                     if (arrayName.equals("Positives")) {
                         DataManager.tempPositives.add(s);
                     } else if (arrayName.equals("Negatives")) {

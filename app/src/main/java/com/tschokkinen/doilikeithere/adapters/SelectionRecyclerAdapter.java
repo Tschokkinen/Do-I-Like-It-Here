@@ -11,16 +11,17 @@ import android.widget.TextView;
 
 import com.tschokkinen.doilikeithere.database.DataManager;
 import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.models.SelectionItem;
 
 import java.util.ArrayList;
 
 
 public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecyclerAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerAdapter";
-    private ArrayList<String> recyclerViewItems;
+    private static final String TAG = "SelectionRA";
+    private ArrayList<SelectionItem> recyclerViewItems;
     private int selectedPos = RecyclerView.NO_POSITION;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
 
         public ViewHolder(View v) {
@@ -38,18 +39,24 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
                     if (textView.getCurrentTextColor() == Color.BLACK) {
                         textView.setBackgroundColor(Color.TRANSPARENT);
                         textView.setTextColor(Color.GRAY);
+
+                        SelectionItem item = getItem(getBindingAdapterPosition());
                         // Save selection to DataManager selected ArrayList
-                        if (DataManager.selected.contains(textView.getText().toString())) {
-                            DataManager.selected.remove(textView.getText().toString());
+                        if (DataManager.selected.contains(item)) {
+                            DataManager.selected.remove(item);
                             Log.d(TAG, "Removed: " + textView.getText().toString());
                         }
                     } else {
                         textView.setBackgroundColor(selected);
                         textView.setTextColor(Color.BLACK);
+
+                        SelectionItem item = getItem(getBindingAdapterPosition());
                         // Remove selection from DataManager selected ArrayList
-                        if (!DataManager.selected.contains(textView.getText().toString())) {
-                            DataManager.selected.add(textView.getText().toString());
+                        if (!DataManager.selected.contains(item)) {
+                            DataManager.selected.add(item);
                             Log.d(TAG, "Added: " + textView.getText().toString());
+                            SelectionItem selected = getItem(getAbsoluteAdapterPosition());
+                            Log.d(TAG, selected.getName());
                         }
                     }
                 }
@@ -62,7 +69,11 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
         }
     }
 
-    public SelectionRecyclerAdapter(ArrayList<String> dataSet) {
+    public SelectionItem getItem(int pos) {
+        return recyclerViewItems.get(pos);
+    }
+
+    public SelectionRecyclerAdapter(ArrayList<SelectionItem> dataSet) {
         recyclerViewItems = dataSet;
     }
 
@@ -80,7 +91,7 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
         viewHolder.itemView.setSelected(selectedPos == position);
 
         // Replace elements with recyclerViewItems elements.
-        viewHolder.getTextView().setText(recyclerViewItems.get(position));
+        viewHolder.getTextView().setText(recyclerViewItems.get(position).getName());
     }
 
     @Override
