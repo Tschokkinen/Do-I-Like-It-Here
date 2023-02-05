@@ -23,7 +23,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class AddNewItem extends Fragment {
-    private String TAG = "SettingsFragment";
+    private String TAG = "AddNewItem";
     private FragmentAddNewItemBinding binding;
 
     private String arrayName = "";
@@ -89,22 +89,21 @@ public class AddNewItem extends Fragment {
 
         try {
             DataManager.addNewItem(getContext(), arrayName, nameValue, itemWeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
 
     // Reset all UI fields and variables to their initial state.
     private void resetAll() {
-        binding.itemNameEditText.setText(null);
-        binding.itemWeightEditText.setText(null);
-        binding.radioGroup.setOnCheckedChangeListener(null);
-        binding.radioGroup.clearCheck();
-        arrayName = "";
+        //arrayName = "";
         nameValue = "";
         itemWeight = 0;
+        binding.itemNameEditText.getText().clear();
+        binding.itemWeightEditText.getText().clear();
+        binding.radioGroup.setOnCheckedChangeListener(null);
+        binding.radioGroup.clearCheck();
+        Log.d(TAG, "Values have been reset.");
     }
 
     @Override

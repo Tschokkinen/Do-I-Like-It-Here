@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi;
 
 import com.tschokkinen.doilikeithere.DateFormatters;
 import com.tschokkinen.doilikeithere.models.ReviewItem;
+import com.tschokkinen.doilikeithere.models.SelectionItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,19 +52,19 @@ public class DataManager {
     public static int latestReviewScore = 0;
 
     //Temp arrays used when user is making a review.
-    public static ArrayList<String> tempPositives = new ArrayList<>();
-    public static ArrayList<String> tempNegatives = new ArrayList<>();
-    public static ArrayList<String> tempFeelings = new ArrayList<>();
+    public static ArrayList<SelectionItem> tempPositives = new ArrayList<>();
+    public static ArrayList<SelectionItem> tempNegatives = new ArrayList<>();
+    public static ArrayList<SelectionItem> tempFeelings = new ArrayList<>();
 
     // Location concerning the review.
     public static String location = "";
 
     // Selected items from the recycler view.
-    public static ArrayList<String> selected = new ArrayList<>();
+    public static ArrayList<SelectionItem> selected = new ArrayList<>();
 
     // Used when calculating the review score.
-    private static final Map<String, ArrayList<String>> tempArrays =
-            new HashMap<String, ArrayList<String>>() {
+    private static final Map<String, ArrayList<SelectionItem>> tempArrays =
+            new HashMap<String, ArrayList<SelectionItem>>() {
         {
             put("Positives", tempPositives);
             put("Negatives", tempNegatives);
@@ -220,13 +221,13 @@ public class DataManager {
         // Get current JsonArray name (Positives, Negatives, Feelings) and corresponding tempArrayList.
         // Then get Weight of each temp item.
         // Ignore multiple entries with same name by breaking loop after first one is found.
-        for (Map.Entry<String, ArrayList<String>> entry : tempArrays.entrySet()) {
+        for (Map.Entry<String, ArrayList<SelectionItem>> entry : tempArrays.entrySet()) {
             JSONArray jsonArray = jsonObject.getJSONArray(entry.getKey());
-            for (String s : entry.getValue()) {
+            for (SelectionItem s : entry.getValue()) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject current = jsonArray.getJSONObject(i);
                     //Log.d(TAG, current.getString("Name"));
-                    if (current.getString("Name").equals(s)) {
+                    if (current.getString("Name").equals(s.getName())) {
                         int value = current.getInt("Weight");
                         //Log.d(TAG, "Value of current Weight " + value);
                         totalScore += value;
@@ -247,10 +248,20 @@ public class DataManager {
         // Read file and convert to string.
         String response = readFile(context);
 
+        StringBuilder positivesListString = new StringBuilder();
+        StringBuilder negativesListString = new StringBuilder();
+        StringBuilder feelingsListString = new StringBuilder();
+
         // Convert tempArrays to Strings
-        String positivesListString = String.join(", ", tempPositives);
-        String negativesListString = String.join(", ", tempNegatives);
-        String feelingsListString = String.join(", ", tempFeelings);
+        for(SelectionItem s : tempPositives) {
+            positivesListString.append(s.getName()).append(" ");
+        }
+        for(SelectionItem s : tempNegatives) {
+            negativesListString.append(s.getName()).append(" ");
+        }
+        for(SelectionItem s : tempFeelings) {
+            feelingsListString.append(s.getName()).append(" ");
+        }
 
         // Put response string to JSONObject and get array according to arrayName parameter.
         JSONObject loadedJSONObject = new JSONObject(response);
@@ -268,9 +279,9 @@ public class DataManager {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("Location", location);
-            jsonObject.put("Positives", positivesListString);
-            jsonObject.put("Negatives", negativesListString);
-            jsonObject.put("Feelings", feelingsListString);
+            jsonObject.put("Positives", positivesListString.toString());
+            jsonObject.put("Negatives", negativesListString.toString());
+            jsonObject.put("Feelings", feelingsListString.toString());
             jsonObject.put("Total score", totalScore);
             jsonObject.put("Date", dateAsString);
         } catch (JSONException e) {
@@ -288,7 +299,7 @@ public class DataManager {
     }
 
     // Load JSON data for positive, negative, and feelings selection.
-    public static ArrayList<String> loadSelectionRecyclerviewItems(Context context, String arrayName)
+    public static ArrayList<SelectionItem> loadSelectionRecyclerviewItems(Context context, String arrayName)
             throws IOException, JSONException {
         // Read data back from file.
         String response = readFile(context);
@@ -298,14 +309,19 @@ public class DataManager {
         JSONArray jsonArray = jsonObject.getJSONArray(arrayName);
 
         // Array for requested values.
-        ArrayList<String> requestedValues = new ArrayList<>();
+        ArrayList<SelectionItem> requestedValues = new ArrayList<>();
 
         // Get values by key "Name".
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
                 Log.d(TAG, jsonTemp.getString("Name"));
-                requestedValues.add(jsonTemp.getString("Name"));
+                SelectionItem current = new SelectionItem(
+                        i,
+                        jsonTemp.getString("Name"),
+                        Integer.parseInt(jsonTemp.getString("Weight"))
+                );
+                requestedValues.add(current);
             }
         } catch (JSONException e) {
             e.printStackTrace();
