@@ -59,9 +59,11 @@ public class AddNewItem extends Fragment {
             @Override
             public void onClick(View view) {
                 // Check if any of the fields are empty.
-                if(binding.itemNameEditText.getText().toString().length() != 0 ||
-                        binding.itemWeightEditText.getText().toString().length() != 0 ||
-                        arrayName != "") {
+                Log.d(TAG, "Trying to save.");
+                if(binding.itemNameEditText.getText().toString().length() != 0 &&
+                        binding.itemWeightEditText.getText().toString().length() != 0 &&
+                        !arrayName.equals("")) {
+                    Log.d(TAG, "Checks passed.");
                     saveUserInput();
                     resetAll();
                 } else {
