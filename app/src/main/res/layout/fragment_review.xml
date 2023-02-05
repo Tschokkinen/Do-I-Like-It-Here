@@ -1,63 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ReviewFragment">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/tableLayout1"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".fragments.ReviewFragment">
+
+<TableRow
+    android:id="@+id/tableRow1"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
 
     <EditText
         android:id="@+id/editTextLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:gravity="center|bottom"
         android:ems="10"
         android:hint="Enter location name"
-        android:inputType="textShortMessage|textCapSentences"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:inputType="textShortMessage|textCapSentences"/>
 
     <Button
         android:id="@+id/selectPositivesBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/select_positives"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLocation" />
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:text="@string/select_positives"/>
+</TableRow>
+
+<TableRow
+    android:id="@+id/tableRow2"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1" >
 
     <Button
         android:id="@+id/selectNegativesBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="158dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="159dp"
-        android:text="Select negatives"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectPositivesBtn" />
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:text="Select negatives"/>
 
     <Button
         android:id="@+id/selectFeelingsBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Select feelings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectNegativesBtn" />
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:text="Select feelings"/>
+</TableRow>
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/save_review"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+<Button
+    android:id="@+id/saveButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:text="@string/save_review"/>
+
+</TableLayout>

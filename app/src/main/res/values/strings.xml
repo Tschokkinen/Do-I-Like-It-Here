@@ -20,4 +20,20 @@
     <string name="fragment_title_main_page">Do I Like It Here?</string>
     <string name="fragment_title_review_place">Review Place</string>
     <string name="fragment_title_make_selections">Make Selections</string>
+    <string name="location">Location</string>
+    <string name="location_value">Location value</string>
+    <string name="dat">DAT</string>
+    <string name="positives">Positives</string>
+    <string name="positive_values">Positive values</string>
+    <string name="negatives">Negatives</string>
+    <string name="negative_values">Negative values</string>
+    <string name="feelings">Feelings</string>
+    <string name="feeling_values">Feeling values</string>
+    <string name="score">Score</string>
+    <string name="score_values">Score values</string>
+
+    <!-- Alert -->
+    <string name="empty_review_database">Empty all reviews from database?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
