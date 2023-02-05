@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class SelectionFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         arrayName = getArguments().getString("Selection");
+        Log.d(TAG, "ArrayName " + arrayName);
 
         // Set action bar title according to user selection.
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Select " + arrayName);
@@ -57,16 +59,25 @@ public class SelectionFragment extends Fragment {
 //        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
         // Clear selections made by RecyclerAdapter.
-        DataManager.selected.clear();
+//        DataManager.selected.clear();
 
         // Get items for Recyclerview
-        try {
-            getRecyclerViewData(arrayName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        ArrayList<SelectionItem> previousTempArrayExists = DataManager.checkTempArray(arrayName);
+        if (previousTempArrayExists != null) {
+            recyclerViewItems = previousTempArrayExists;
+            Log.d(TAG, "Not null");
+        } else {
+            try {
+                getRecyclerViewData(arrayName);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
         }
+//        try {
+//            getRecyclerViewData(arrayName);
+//        } catch (IOException | JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -98,24 +109,24 @@ public class SelectionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Clear temp array that corresponds to the data displayed by the recycler view.
-                if (arrayName.equals("Positives")) {
-                    DataManager.clearTemps(DataManager.TempArrays.TEMP_POSITIVES);
-                } else if (arrayName.equals("Negatives")) {
-                    DataManager.clearTemps(DataManager.TempArrays.TEMP_NEGATIVES);
-                } else if (arrayName.equals("Feelings")) {
-                    DataManager.clearTemps(DataManager.TempArrays.TEMP_FEELINGS);
-                }
+//                if (arrayName.equals("Positives")) {
+//                    DataManager.clearTemps(DataManager.TempArrays.TEMP_POSITIVES);
+//                } else if (arrayName.equals("Negatives")) {
+//                    DataManager.clearTemps(DataManager.TempArrays.TEMP_NEGATIVES);
+//                } else if (arrayName.equals("Feelings")) {
+//                    DataManager.clearTemps(DataManager.TempArrays.TEMP_FEELINGS);
+//                }
 
                 // Save user selections to empty temp array list.
-                for(SelectionItem s : DataManager.selected) {
-                    if (arrayName.equals("Positives")) {
-                        DataManager.tempPositives.add(s);
-                    } else if (arrayName.equals("Negatives")) {
-                        DataManager.tempNegatives.add(s);
-                    } else if (arrayName.equals("Feelings")) {
-                        DataManager.tempFeelings.add(s);
-                    }
-                }
+//                for(SelectionItem s : DataManager.selected) {
+//                    if (arrayName.equals("Positives")) {
+//                        DataManager.tempPositives.add(s);
+//                    } else if (arrayName.equals("Negatives")) {
+//                        DataManager.tempNegatives.add(s);
+//                    } else if (arrayName.equals("Feelings")) {
+//                        DataManager.tempFeelings.add(s);
+//                    }
+//                }
 
                 NavHostFragment.findNavController(SelectionFragment.this)
                         .navigate(R.id.action_SelectionFragment_to_ReviewFragment);

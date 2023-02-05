@@ -51,6 +51,7 @@ public class AddNewItem extends Fragment {
 
                 // Get arrayName by radio button selection.
                 arrayName = radioButton.getTag().toString();
+                Log.d(TAG, "ArrayName " + arrayName);
             }
         });
 
@@ -59,11 +60,11 @@ public class AddNewItem extends Fragment {
             @Override
             public void onClick(View view) {
                 // Check if any of the fields are empty.
-                Log.d(TAG, "Trying to save.");
+                // Log.d(TAG, "Trying to save.");
                 if(binding.itemNameEditText.getText().toString().length() != 0 &&
                         binding.itemWeightEditText.getText().toString().length() != 0 &&
                         !arrayName.equals("")) {
-                    Log.d(TAG, "Checks passed.");
+                    // Log.d(TAG, "Checks passed.");
                     saveUserInput();
                     resetAll();
                 } else {
@@ -101,8 +102,8 @@ public class AddNewItem extends Fragment {
         itemWeight = 0;
         binding.itemNameEditText.getText().clear();
         binding.itemWeightEditText.getText().clear();
-        binding.radioGroup.setOnCheckedChangeListener(null);
-        binding.radioGroup.clearCheck();
+        //binding.radioGroup.setOnCheckedChangeListener(null);
+        //binding.radioGroup.clearCheck();
         Log.d(TAG, "Values have been reset.");
     }
 
