@@ -20,6 +20,8 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
     private static final String TAG = "SelectionRA";
     private ArrayList<SelectionItem> recyclerViewItems;
     private int selectedPos = RecyclerView.NO_POSITION;
+    private int selectedColor = Color.parseColor("#78ABEC");
+    private int defaultColor = Color.parseColor("#FFFFFF");
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
@@ -27,37 +29,35 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
         public ViewHolder(View v) {
             super(v);
 
-            int selected = Color.parseColor("#78ABEC");
-            int defaultColor = Color.parseColor("#FFFFFF");
-
             // Click listener for the ViewHolder's View.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Log.d(TAG, "Element " + getBindingAdapterPosition() + " clicked.");
                     textView = v.findViewById(R.id.tx);
+                    SelectionItem item = getItem(getBindingAdapterPosition());
                     if (textView.getCurrentTextColor() == Color.BLACK) {
                         textView.setBackgroundColor(Color.TRANSPARENT);
                         textView.setTextColor(Color.GRAY);
+                        item.setHasBeenSelected();
 
-                        SelectionItem item = getItem(getBindingAdapterPosition());
                         // Save selection to DataManager selected ArrayList
-                        if (DataManager.selected.contains(item)) {
-                            DataManager.selected.remove(item);
-                            Log.d(TAG, "Removed: " + textView.getText().toString());
-                        }
+//                        if (DataManager.selected.contains(item)) {
+//                            DataManager.selected.remove(item);
+//                            Log.d(TAG, "Removed: " + textView.getText().toString());
+//                        }
                     } else {
-                        textView.setBackgroundColor(selected);
+                        textView.setBackgroundColor(selectedColor);
                         textView.setTextColor(Color.BLACK);
+                        item.setHasBeenSelected();
 
-                        SelectionItem item = getItem(getBindingAdapterPosition());
                         // Remove selection from DataManager selected ArrayList
-                        if (!DataManager.selected.contains(item)) {
-                            DataManager.selected.add(item);
-                            Log.d(TAG, "Added: " + textView.getText().toString());
-                            SelectionItem selected = getItem(getAbsoluteAdapterPosition());
-                            Log.d(TAG, selected.getName());
-                        }
+//                        if (!DataManager.selected.contains(item)) {
+//                            DataManager.selected.add(item);
+//                            Log.d(TAG, "Added: " + textView.getText().toString());
+//                            SelectionItem selected = getItem(getAbsoluteAdapterPosition());
+//                            Log.d(TAG, selected.getName());
+//                        }
                     }
                 }
             });
@@ -92,6 +92,13 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
 
         // Replace elements with recyclerViewItems elements.
         viewHolder.getTextView().setText(recyclerViewItems.get(position).getName());
+
+        // Check if item has been checked previously before before saving the review
+        // i.e. user revisits selection page.
+        if(recyclerViewItems.get(position).getHasBeenSelected()) {
+            viewHolder.getTextView().setBackgroundColor(selectedColor);
+            viewHolder.getTextView().setTextColor(Color.BLACK);
+        }
     }
 
     @Override

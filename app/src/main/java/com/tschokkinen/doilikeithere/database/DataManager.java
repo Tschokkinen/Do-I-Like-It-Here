@@ -97,6 +97,32 @@ public class DataManager {
         location = "";
     }
 
+    public static ArrayList<SelectionItem> checkTempArray(String arrayName) {
+        switch (arrayName) {
+            case "Positives":
+                if (tempPositives.size() > 0) {
+                    Log.d(TAG, "Positives");
+                    return tempPositives;
+                }
+                break;
+            case "Negatives":
+                if (tempNegatives.size() > 0) {
+                    Log.d(TAG, "Negatives returned");
+                    return tempNegatives;
+                }
+                break;
+            case "Feelings":
+                if (tempFeelings.size() > 0) {
+                    Log.d(TAG, "Feelings");
+                    return tempFeelings;
+                }
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
+
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
         Log.d(TAG, "Initialize database");
@@ -211,31 +237,57 @@ public class DataManager {
     // Calculate place score by summing positives together and subtracting negatives from the total.
     private static int calculateScore(Context context) throws JSONException, IOException {
         int totalScore = 0;
-
+        Log.d(TAG, "Calculate score");
         // Read file and convert to string.
-        String response = readFile(context);
+//        String response = readFile(context);
 
         // Put response string to JSONObject and get array according to arrayName parameter.
-        JSONObject jsonObject = new JSONObject(response);
+//        JSONObject jsonObject = new JSONObject(response);
 
         // Get current JsonArray name (Positives, Negatives, Feelings) and corresponding tempArrayList.
         // Then get Weight of each temp item.
         // Ignore multiple entries with same name by breaking loop after first one is found.
-        for (Map.Entry<String, ArrayList<SelectionItem>> entry : tempArrays.entrySet()) {
-            JSONArray jsonArray = jsonObject.getJSONArray(entry.getKey());
-            for (SelectionItem s : entry.getValue()) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject current = jsonArray.getJSONObject(i);
-                    //Log.d(TAG, current.getString("Name"));
-                    if (current.getString("Name").equals(s.getName())) {
-                        int value = current.getInt("Weight");
-                        //Log.d(TAG, "Value of current Weight " + value);
-                        totalScore += value;
-                        break;
-                    }
-                }
+//        for (Map.Entry<String, ArrayList<SelectionItem>> entry : tempArrays.entrySet()) {
+//            JSONArray jsonArray = jsonObject.getJSONArray(entry.getKey());
+//            for (SelectionItem s : entry.getValue()) {
+//                for (int i = 0; i < jsonArray.length(); i++) {
+//                    JSONObject current = jsonArray.getJSONObject(i);
+//                    //Log.d(TAG, current.getString("Name"));
+//                    if (current.getString("Name").equals(s.getName())) {
+//                        int value = current.getInt("Weight");
+//                        //Log.d(TAG, "Value of current Weight " + value);
+//                        totalScore += value;
+//                        break;
+//                    }
+//                }
+//            }
+//        } // Not the most elegant solution with tons of nesting, but works for now. :)
+
+        // REWORK THIS SECTION
+        for (SelectionItem s : tempPositives) {
+            if (s.getHasBeenSelected()) {
+                int value = s.getWeight();
+                Log.d(TAG, "Value of current Weight " + value);
+                totalScore += value;
             }
-        } // Not the most elegant solution with tons of nesting, but works for now. :)
+        }
+
+        for (SelectionItem s : tempNegatives) {
+            if (s.getHasBeenSelected()) {
+                int value = s.getWeight();
+                Log.d(TAG, "Value of current Weight " + value);
+                totalScore += value;
+            }
+        }
+
+        for (SelectionItem s : tempFeelings) {
+            if (s.getHasBeenSelected()) {
+                int value = s.getWeight();
+                Log.d(TAG, "Value of current Weight " + value);
+                totalScore += value;
+            }
+        }
+        // END REWORK SECTION
 
         //Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
         latestReviewScore = totalScore;
@@ -254,13 +306,19 @@ public class DataManager {
 
         // Convert tempArrays to Strings
         for(SelectionItem s : tempPositives) {
-            positivesListString.append(s.getName()).append(" ");
+            if (s.getHasBeenSelected()) {
+                positivesListString.append(s.getName()).append(" ");
+            }
         }
         for(SelectionItem s : tempNegatives) {
-            negativesListString.append(s.getName()).append(" ");
+            if (s.getHasBeenSelected()) {
+                negativesListString.append(s.getName()).append(" ");
+            }
         }
         for(SelectionItem s : tempFeelings) {
-            feelingsListString.append(s.getName()).append(" ");
+            if (s.getHasBeenSelected()) {
+                feelingsListString.append(s.getName()).append(" ");
+            }
         }
 
         // Put response string to JSONObject and get array according to arrayName parameter.
@@ -327,7 +385,19 @@ public class DataManager {
             e.printStackTrace();
         }
 
-        return requestedValues;
+        // Assign requested values to a corresponding temp array.
+        switch (arrayName) {
+            case "Positives":
+                tempPositives = requestedValues;
+                return tempPositives;
+            case "Negatives":
+                tempNegatives = requestedValues;
+                return tempNegatives;
+            case "Feelings":
+                tempFeelings = requestedValues;
+                return tempFeelings;
+        }
+        return null;
     }
 
     // Load reviews from JSON file.
@@ -340,7 +410,6 @@ public class DataManager {
 
         // Array for requested values.
         ArrayList<ReviewItem> requestedValues = new ArrayList<>();
-
 
         // Get review data.
         try {
