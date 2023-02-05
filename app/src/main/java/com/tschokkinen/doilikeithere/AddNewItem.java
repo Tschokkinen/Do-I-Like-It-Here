@@ -25,9 +25,10 @@ import java.io.IOException;
 public class AddNewItem extends Fragment {
     private String TAG = "SettingsFragment";
     private FragmentAddNewItemBinding binding;
-    private RadioGroup radioGroup;
-    private String arrayName = "";
 
+    private String arrayName = "";
+    private String nameValue = "";
+    private int itemWeight = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,8 +42,7 @@ public class AddNewItem extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //radioGroup = (RadioGroup) getView().findViewById(R.id.radioGroup);
-
+        // Radio group listener.
         binding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -54,35 +54,55 @@ public class AddNewItem extends Fragment {
             }
         });
 
+        // Save button listener
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //EditText itemName_editText = getView().findViewById(R.id.itemName_editText);
-                String nameValue = binding.itemNameEditText.getText().toString();
-
-                //EditText itemWeight_editText = getView().findViewById(R.id.itemWeight_editText);
-                int itemWeight = Integer.parseInt(binding.itemWeightEditText.getText().toString());
-                Log.d("SettingsFragment", String.valueOf(itemWeight));
-
-                // If user entered positive value for a negative attribute, convert value to negative.
-                if (arrayName.equals("Negatives") && itemWeight > 0) {
-                    itemWeight = (-itemWeight);
-                    //Log.d(TAG, "Converted int " + itemWeight);
-                } else if (arrayName.equals("Positives") && itemWeight < 0) {
-                    itemWeight *= (-1);
-                }
-
-                if (!arrayName.isEmpty() && !nameValue.isEmpty()) {
-                    try {
-                        DataManager.addNewItem(getContext(), arrayName, nameValue, itemWeight);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                // Check if any of the fields are empty.
+                if(binding.itemNameEditText.getText().toString().length() != 0 ||
+                        binding.itemWeightEditText.getText().toString().length() != 0 ||
+                        arrayName != "") {
+                    saveUserInput();
+                    resetAll();
+                } else {
+                    // Give empty field message.
+                    // (not yet implemented)
                 }
             }
         });
+    }
+
+    // Save user input.
+    private void saveUserInput() {
+        nameValue = binding.itemNameEditText.getText().toString();
+        itemWeight = Integer.parseInt(binding.itemWeightEditText.getText().toString());
+        // If user entered positive value for a negative attribute, convert value to negative.
+        // If user entered negative value for a positive attribute, convert value to positive.
+        if (arrayName.equals("Negatives") && itemWeight > 0) {
+            itemWeight = (-itemWeight);
+            //Log.d(TAG, "Converted int " + itemWeight);
+        } else if (arrayName.equals("Positives") && itemWeight < 0) {
+            itemWeight *= (-1);
+        }
+
+        try {
+            DataManager.addNewItem(getContext(), arrayName, nameValue, itemWeight);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Reset all UI fields and variables to their initial state.
+    private void resetAll() {
+        binding.itemNameEditText.setText(null);
+        binding.itemWeightEditText.setText(null);
+        binding.radioGroup.setOnCheckedChangeListener(null);
+        binding.radioGroup.clearCheck();
+        arrayName = "";
+        nameValue = "";
+        itemWeight = 0;
     }
 
     @Override
