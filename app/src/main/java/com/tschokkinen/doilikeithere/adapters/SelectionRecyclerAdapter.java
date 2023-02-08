@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.tschokkinen.doilikeithere.database.DataManager;
 import com.tschokkinen.doilikeithere.R;
-import com.tschokkinen.doilikeithere.databinding.FragmentSelectionBinding;
 import com.tschokkinen.doilikeithere.models.SelectionItem;
 
 import java.util.ArrayList;
@@ -22,11 +21,6 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
     private ArrayList<SelectionItem> recyclerViewItems;
     private int selectedPos = RecyclerView.NO_POSITION;
     private int selectedColor = Color.parseColor("#78ABEC");
-    private int defaultColor = Color.parseColor("#FFFFFF");
-
-    public SelectionRecyclerAdapter(ArrayList<SelectionItem> dataSet) {
-        recyclerViewItems = dataSet;
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
@@ -34,7 +28,7 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
         public ViewHolder(View v) {
             super(v);
 
-            // Change item background and text color when item is clicked.
+            // Change item color if it has been clicked.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -60,9 +54,12 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
         }
     }
 
-    // Get item at recyclerview position
     public SelectionItem getItem(int pos) {
         return recyclerViewItems.get(pos);
+    }
+
+    public SelectionRecyclerAdapter(ArrayList<SelectionItem> dataSet) {
+        recyclerViewItems = dataSet;
     }
 
     @Override
