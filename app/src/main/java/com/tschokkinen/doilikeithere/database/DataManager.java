@@ -21,10 +21,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.channels.SelectionKey;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -315,17 +317,17 @@ public class DataManager {
         // Convert tempArrays to Strings
         for(SelectionItem s : tempPositives) {
             if (s.getHasBeenSelected()) {
-                positivesListString.append(s.getName()).append(" ");
+                positivesListString.append(s.getName()).append(", ");
             }
         }
         for(SelectionItem s : tempNegatives) {
             if (s.getHasBeenSelected()) {
-                negativesListString.append(s.getName()).append(" ");
+                negativesListString.append(s.getName()).append(", ");
             }
         }
         for(SelectionItem s : tempFeelings) {
             if (s.getHasBeenSelected()) {
-                feelingsListString.append(s.getName()).append(" ");
+                feelingsListString.append(s.getName()).append(", ");
             }
         }
 
