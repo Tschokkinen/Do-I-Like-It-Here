@@ -74,7 +74,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryViewHold
                     builder.setMessage("Delete review?")
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // Empty review database.
+                                    // Remove selected review from database.
                                     try {
                                         DataManager.deleteFromDatabase(context,
                                                 DataManager.DeleteCommands.DELETE_ONE, pos);
