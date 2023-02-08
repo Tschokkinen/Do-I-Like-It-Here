@@ -4,7 +4,10 @@
     android:layout_height="62sp"
     android:layout_marginLeft="16sp"
     android:layout_marginRight="16sp"
-    android:gravity="center">
+    android:gravity="center"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <TextView
         android:layout_marginTop="5sp"

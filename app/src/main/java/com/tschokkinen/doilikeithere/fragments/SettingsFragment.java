@@ -61,7 +61,7 @@ public class SettingsFragment extends Fragment {
                // HistoryRecyclerAdapter when deleting individual reviews.
                // Currently HistoryRecyclerAdapter creates its own Alert inline.
                DialogFragment alert = new Alert("Empty reviews from database",
-                       DataManager.DeleteCommands.DELETE_REVIEWS, 0);
+                       DataManager.DeleteCommands.DELETE_REVIEWS, 0, null);
                alert.show(getParentFragmentManager(),"Empty reviews from database");
            }
         });
@@ -74,7 +74,7 @@ public class SettingsFragment extends Fragment {
                 // HistoryRecyclerAdapter when deleting individual reviews.
                 // Currently HistoryRecyclerAdapter creates its own Alert inline.
                 DialogFragment alert = new Alert("Empty entire database",
-                        DataManager.DeleteCommands.DELETE_ENTIRE_DATABASE, 0);
+                        DataManager.DeleteCommands.DELETE_ENTIRE_DATABASE, 0, null);
                 alert.show(getParentFragmentManager(), "Empty entire database");
             }
         });

@@ -170,7 +170,8 @@ public class DataManager {
     }
 
     // Empty reviewsArray by replace existing array with an empty array.
-    public static void deleteFromDatabase(Context context, DeleteCommands command, int position) throws JSONException, IOException {
+    public static void deleteFromDatabase(Context context, DeleteCommands command, int position,
+                                          String arrayName) throws JSONException, IOException {
         // Read file and convert to string.
         String response = readFile(context);
 
@@ -188,10 +189,10 @@ public class DataManager {
             loadedJSONObject.put("Negatives", emptyJSONArray);
             loadedJSONObject.put("Feelings", emptyJSONArray);
             loadedJSONObject.put("Reviews", emptyJSONArray);
-        } else if (command == DeleteCommands.DELETE_ONE) { // Delete one review
-            JSONArray jsonArray = loadedJSONObject.getJSONArray("Reviews");
+        } else if (command == DeleteCommands.DELETE_ONE) { // Delete one item or review
+            JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
             jsonArray.remove(position);
-            loadedJSONObject.put("Reviews", jsonArray);
+            loadedJSONObject.put(arrayName, jsonArray);
         }
 
 

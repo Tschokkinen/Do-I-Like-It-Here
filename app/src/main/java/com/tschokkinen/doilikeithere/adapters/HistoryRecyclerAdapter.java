@@ -33,11 +33,14 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryViewHold
     private int selectedPos = RecyclerView.NO_POSITION;
     Context context;
     private Fragment fragment;
+    private String arrayName;
 
-    public HistoryRecyclerAdapter(ArrayList<ReviewItem> dataSet, Context context, Fragment fragment) {
+    public HistoryRecyclerAdapter(ArrayList<ReviewItem> dataSet, Context context, Fragment fragment,
+    String arrayName) {
         this.recyclerViewItems = dataSet;
         this.context = context;
         this.fragment = fragment;
+        this.arrayName = arrayName;
         //Log.d(TAG, "HistoryRecyclerAdapter instantiated.");
     }
 
@@ -77,7 +80,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryViewHold
                                     // Remove selected review from database.
                                     try {
                                         DataManager.deleteFromDatabase(context,
-                                                DataManager.DeleteCommands.DELETE_ONE, pos);
+                                                DataManager.DeleteCommands.DELETE_ONE, pos, arrayName);
                                         removeItem(pos, viewHolder);
                                     } catch (JSONException e) {
                                         e.printStackTrace();

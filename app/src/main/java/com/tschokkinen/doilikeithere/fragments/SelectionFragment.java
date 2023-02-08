@@ -82,7 +82,7 @@ public class SelectionFragment extends Fragment {
 
         setRecyclerViewLayoutManager();
 
-        selectionRecyclerAdapter = new SelectionRecyclerAdapter(recyclerViewItems);
+        selectionRecyclerAdapter = new SelectionRecyclerAdapter(recyclerViewItems, getContext(), arrayName);
         // Set RecyclerAdapter as the adapter for RecyclerView.
         binding.recyclerView.setAdapter(selectionRecyclerAdapter);
 
