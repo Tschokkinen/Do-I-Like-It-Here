@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.tschokkinen.doilikeithere.database.DataManager;
 import com.tschokkinen.doilikeithere.R;
+import com.tschokkinen.doilikeithere.databinding.FragmentSelectionBinding;
 import com.tschokkinen.doilikeithere.models.SelectionItem;
 
 import java.util.ArrayList;
@@ -23,41 +24,31 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
     private int selectedColor = Color.parseColor("#78ABEC");
     private int defaultColor = Color.parseColor("#FFFFFF");
 
+    public SelectionRecyclerAdapter(ArrayList<SelectionItem> dataSet) {
+        recyclerViewItems = dataSet;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
 
         public ViewHolder(View v) {
             super(v);
 
-            // Click listener for the ViewHolder's View.
+            // Change item background and text color when item is clicked.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Log.d(TAG, "Element " + getBindingAdapterPosition() + " clicked.");
                     textView = v.findViewById(R.id.tx);
                     SelectionItem item = getItem(getBindingAdapterPosition());
-                    if (textView.getCurrentTextColor() == Color.BLACK) {
+                    if (item.getHasBeenSelected()) {
                         textView.setBackgroundColor(Color.TRANSPARENT);
                         textView.setTextColor(Color.GRAY);
                         item.setHasBeenSelected();
-
-                        // Save selection to DataManager selected ArrayList
-//                        if (DataManager.selected.contains(item)) {
-//                            DataManager.selected.remove(item);
-//                            Log.d(TAG, "Removed: " + textView.getText().toString());
-//                        }
                     } else {
                         textView.setBackgroundColor(selectedColor);
                         textView.setTextColor(Color.BLACK);
                         item.setHasBeenSelected();
-
-                        // Remove selection from DataManager selected ArrayList
-//                        if (!DataManager.selected.contains(item)) {
-//                            DataManager.selected.add(item);
-//                            Log.d(TAG, "Added: " + textView.getText().toString());
-//                            SelectionItem selected = getItem(getAbsoluteAdapterPosition());
-//                            Log.d(TAG, selected.getName());
-//                        }
                     }
                 }
             });
@@ -69,12 +60,9 @@ public class SelectionRecyclerAdapter extends RecyclerView.Adapter<SelectionRecy
         }
     }
 
+    // Get item at recyclerview position
     public SelectionItem getItem(int pos) {
         return recyclerViewItems.get(pos);
-    }
-
-    public SelectionRecyclerAdapter(ArrayList<SelectionItem> dataSet) {
-        recyclerViewItems = dataSet;
     }
 
     @Override

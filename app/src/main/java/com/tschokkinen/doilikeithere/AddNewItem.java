@@ -37,8 +37,7 @@ public class AddNewItem extends Fragment {
         binding = FragmentAddNewItemBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
-
-
+    
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -97,13 +96,10 @@ public class AddNewItem extends Fragment {
 
     // Reset all UI fields and variables to their initial state.
     private void resetAll() {
-        //arrayName = "";
         nameValue = "";
         itemWeight = 0;
         binding.itemNameEditText.getText().clear();
         binding.itemWeightEditText.getText().clear();
-        //binding.radioGroup.setOnCheckedChangeListener(null);
-        //binding.radioGroup.clearCheck();
         Log.d(TAG, "Values have been reset.");
     }
 

@@ -27,22 +27,12 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
+ * Settings fragment
  */
 public class SettingsFragment extends Fragment {
     private String TAG = "SettingsFragment";
     private FragmentSettingsBinding binding;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-
-     * @return A new instance of fragment SettingsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment

@@ -33,7 +33,6 @@ public class SelectionFragment extends Fragment {
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private String arrayName;
 
-//    protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
     protected SelectionRecyclerAdapter selectionRecyclerAdapter;
 
@@ -58,9 +57,6 @@ public class SelectionFragment extends Fragment {
 //        };
 //        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
-        // Clear selections made by RecyclerAdapter.
-//        DataManager.selected.clear();
-
         // Get items for Recyclerview
         ArrayList<SelectionItem> previousTempArrayExists = DataManager.checkTempArray(arrayName);
         if (previousTempArrayExists != null) {
@@ -73,11 +69,6 @@ public class SelectionFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-//        try {
-//            getRecyclerViewData(arrayName);
-//        } catch (IOException | JSONException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
@@ -85,9 +76,6 @@ public class SelectionFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSelectionBinding.inflate(inflater, container, false);
         binding.getRoot();
-
-        // Get RecyclerView
-        //recyclerView = (RecyclerView) binding.getRoot().findViewById(R.id.recyclerView);
 
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
@@ -104,30 +92,10 @@ public class SelectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Save selections to a temporary array and go back to the previous page.
+        // Go back to the previous page.
         binding.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Clear temp array that corresponds to the data displayed by the recycler view.
-//                if (arrayName.equals("Positives")) {
-//                    DataManager.clearTemps(DataManager.TempArrays.TEMP_POSITIVES);
-//                } else if (arrayName.equals("Negatives")) {
-//                    DataManager.clearTemps(DataManager.TempArrays.TEMP_NEGATIVES);
-//                } else if (arrayName.equals("Feelings")) {
-//                    DataManager.clearTemps(DataManager.TempArrays.TEMP_FEELINGS);
-//                }
-
-                // Save user selections to empty temp array list.
-//                for(SelectionItem s : DataManager.selected) {
-//                    if (arrayName.equals("Positives")) {
-//                        DataManager.tempPositives.add(s);
-//                    } else if (arrayName.equals("Negatives")) {
-//                        DataManager.tempNegatives.add(s);
-//                    } else if (arrayName.equals("Feelings")) {
-//                        DataManager.tempFeelings.add(s);
-//                    }
-//                }
-
                 NavHostFragment.findNavController(SelectionFragment.this)
                         .navigate(R.id.action_SelectionFragment_to_ReviewFragment);
             }

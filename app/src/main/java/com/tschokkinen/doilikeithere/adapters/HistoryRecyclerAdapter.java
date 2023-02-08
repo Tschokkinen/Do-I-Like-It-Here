@@ -68,8 +68,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryViewHold
 
                 if (pos != selectedPos) {
                     // Create dialog. Position indicates item position in JSON file
-                    // Currently HistoryRecyclerAdapter creates its own Alert inline:
-                    // when deleting entire database or all reviews Alert class is used.
+                    // NOTE: Currently HistoryRecyclerAdapter creates its own Alert inline:
+                    // when deleting entire database or all reviews separate Alert class is used.
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("Delete review?")
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
