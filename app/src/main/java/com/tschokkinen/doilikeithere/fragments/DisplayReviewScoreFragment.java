@@ -15,14 +15,15 @@ import com.tschokkinen.doilikeithere.database.DataManager;
 import com.tschokkinen.doilikeithere.R;
 import com.tschokkinen.doilikeithere.databinding.FragmentDisplayReviewScoreBinding;
 
+/**
+ * A class to display review score when review is saved.
+ */
 public class DisplayReviewScoreFragment extends Fragment {
     private FragmentDisplayReviewScoreBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override

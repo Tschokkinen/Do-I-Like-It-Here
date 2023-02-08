@@ -21,10 +21,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.channels.SelectionKey;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -170,7 +172,8 @@ public class DataManager {
     }
 
     // Empty reviewsArray by replace existing array with an empty array.
-    public static void deleteFromDatabase(Context context, DeleteCommands command, int position) throws JSONException, IOException {
+    public static void deleteFromDatabase(Context context, DeleteCommands command, int position,
+                                          String arrayName) throws JSONException, IOException {
         // Read file and convert to string.
         String response = readFile(context);
 
@@ -188,10 +191,10 @@ public class DataManager {
             loadedJSONObject.put("Negatives", emptyJSONArray);
             loadedJSONObject.put("Feelings", emptyJSONArray);
             loadedJSONObject.put("Reviews", emptyJSONArray);
-        } else if (command == DeleteCommands.DELETE_ONE) { // Delete one review
-            JSONArray jsonArray = loadedJSONObject.getJSONArray("Reviews");
+        } else if (command == DeleteCommands.DELETE_ONE) { // Delete one item or review
+            JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
             jsonArray.remove(position);
-            loadedJSONObject.put("Reviews", jsonArray);
+            loadedJSONObject.put(arrayName, jsonArray);
         }
 
 
@@ -229,6 +232,13 @@ public class DataManager {
 
         // Put updated jsonArray in loadedJSON object according to arrayName parameter.
         loadedJSONObject.put(arrayName, jsonArray);
+
+        // Check if temp array has been already loaded.
+        // If not empty add current item.
+        ArrayList<SelectionItem> tempArray = checkTempArray(arrayName);
+        if(!tempArray.isEmpty()) {
+            updateSelectionRecyclerviewItems(tempArray, tempArray.size()+1, nameValue, itemWeight);
+        }
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
@@ -307,17 +317,17 @@ public class DataManager {
         // Convert tempArrays to Strings
         for(SelectionItem s : tempPositives) {
             if (s.getHasBeenSelected()) {
-                positivesListString.append(s.getName()).append(" ");
+                positivesListString.append(s.getName()).append(", ");
             }
         }
         for(SelectionItem s : tempNegatives) {
             if (s.getHasBeenSelected()) {
-                negativesListString.append(s.getName()).append(" ");
+                negativesListString.append(s.getName()).append(", ");
             }
         }
         for(SelectionItem s : tempFeelings) {
             if (s.getHasBeenSelected()) {
-                feelingsListString.append(s.getName()).append(" ");
+                feelingsListString.append(s.getName()).append(", ");
             }
         }
 
@@ -354,6 +364,12 @@ public class DataManager {
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
+    }
+
+    public static void updateSelectionRecyclerviewItems(ArrayList<SelectionItem> tempArray,
+                                                        int id, String itemName, int itemWeight) {
+        SelectionItem selectionItem = new SelectionItem(id, itemName, itemWeight);
+        tempArray.add(selectionItem);
     }
 
     // Load JSON data for positive, negative, and feelings selection.

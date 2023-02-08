@@ -1,6 +1,7 @@
 package com.tschokkinen.doilikeithere.fragments;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,22 +28,12 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
+ * Settings fragment
  */
 public class SettingsFragment extends Fragment {
     private String TAG = "SettingsFragment";
     private FragmentSettingsBinding binding;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-
-     * @return A new instance of fragment SettingsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -53,14 +44,14 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Add new item to database.
-        binding.addItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SettingsFragment.this)
-                        .navigate(R.id.action_settingsFragment_to_addNewItem);
-            }
-        });
+//        // Add new item to database.
+//        binding.addItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                NavHostFragment.findNavController(SettingsFragment.this)
+//                        .navigate(R.id.action_settingsFragment_to_addNewItem);
+//            }
+//        });
 
         // Empty reviews from database.
         binding.emptyReviewsDatabase.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +61,7 @@ public class SettingsFragment extends Fragment {
                // HistoryRecyclerAdapter when deleting individual reviews.
                // Currently HistoryRecyclerAdapter creates its own Alert inline.
                DialogFragment alert = new Alert("Empty reviews from database",
-                       DataManager.DeleteCommands.DELETE_REVIEWS, 0);
+                       DataManager.DeleteCommands.DELETE_REVIEWS, 0, null);
                alert.show(getParentFragmentManager(),"Empty reviews from database");
            }
         });
@@ -83,7 +74,7 @@ public class SettingsFragment extends Fragment {
                 // HistoryRecyclerAdapter when deleting individual reviews.
                 // Currently HistoryRecyclerAdapter creates its own Alert inline.
                 DialogFragment alert = new Alert("Empty entire database",
-                        DataManager.DeleteCommands.DELETE_ENTIRE_DATABASE, 0);
+                        DataManager.DeleteCommands.DELETE_ENTIRE_DATABASE, 0, null);
                 alert.show(getParentFragmentManager(), "Empty entire database");
             }
         });

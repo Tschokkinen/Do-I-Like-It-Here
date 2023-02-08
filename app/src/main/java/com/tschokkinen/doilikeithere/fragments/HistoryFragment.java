@@ -34,6 +34,7 @@ public class HistoryFragment extends Fragment {
     protected RecyclerView recyclerView;
     protected RecyclerView.LayoutManager layoutManager;
     protected HistoryRecyclerAdapter historyRecyclerAdapter;
+    private String arrayName = "Reviews";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class HistoryFragment extends Fragment {
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
 
-        historyRecyclerAdapter = new HistoryRecyclerAdapter(recyclerViewItems, getContext(), this);
+        historyRecyclerAdapter = new HistoryRecyclerAdapter(recyclerViewItems, getContext(), this, arrayName);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), RecyclerView.VERTICAL);
         binding.recyclerView.addItemDecoration(dividerItemDecoration);

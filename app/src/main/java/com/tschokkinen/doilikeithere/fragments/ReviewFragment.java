@@ -2,6 +2,7 @@ package com.tschokkinen.doilikeithere.fragments;
 
 import org.json.JSONException;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -21,8 +23,6 @@ import java.io.IOException;
 public class ReviewFragment extends Fragment {
 
     private FragmentReviewBinding binding;
-//    private EditText location_editText;
-//    private String fromMainPageFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +52,7 @@ public class ReviewFragment extends Fragment {
 
         // Save review to database and go back to the main page (i.e. FirstFragment).
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 try {

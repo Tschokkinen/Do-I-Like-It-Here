@@ -60,6 +60,9 @@
             app:destination="@id/ReviewFragment"
             app:popUpTo="@+id/ReviewFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_SelectionFragment_to_addNewItem"
+            app:destination="@id/addNewItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -82,17 +85,14 @@
             app:destination="@id/MainPageFragment"
             app:popUpTo="@+id/MainPageFragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_settingsFragment_to_addNewItem"
-            app:destination="@id/addNewItem" />
     </fragment>
     <fragment
-        android:id="@+id/addNewItem"
+        android:id="@+id/addNewItemFragment"
         android:name="com.tschokkinen.doilikeithere.AddNewItem"
         android:label="AddNewItem" >
         <action
-            android:id="@+id/action_addNewItem_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            android:id="@+id/action_addNewItem_to_SelectionFragment"
+            app:destination="@id/SelectionFragment" />
     </fragment>
 
 
