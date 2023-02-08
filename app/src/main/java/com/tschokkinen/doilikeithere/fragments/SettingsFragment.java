@@ -44,14 +44,14 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Add new item to database.
-        binding.addItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SettingsFragment.this)
-                        .navigate(R.id.action_settingsFragment_to_addNewItem);
-            }
-        });
+//        // Add new item to database.
+//        binding.addItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                NavHostFragment.findNavController(SettingsFragment.this)
+//                        .navigate(R.id.action_settingsFragment_to_addNewItem);
+//            }
+//        });
 
         // Empty reviews from database.
         binding.emptyReviewsDatabase.setOnClickListener(new View.OnClickListener() {

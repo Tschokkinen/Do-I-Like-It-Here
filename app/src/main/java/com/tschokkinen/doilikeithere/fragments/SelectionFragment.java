@@ -100,6 +100,14 @@ public class SelectionFragment extends Fragment {
                         .navigate(R.id.action_SelectionFragment_to_ReviewFragment);
             }
         });
+
+        binding.buttonNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(SelectionFragment.this)
+                        .navigate(R.id.action_SelectionFragment_to_addNewItem);
+            }
+        });
     }
 
     private void setRecyclerViewLayoutManager() {

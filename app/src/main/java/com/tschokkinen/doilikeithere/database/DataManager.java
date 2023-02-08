@@ -230,6 +230,13 @@ public class DataManager {
         // Put updated jsonArray in loadedJSON object according to arrayName parameter.
         loadedJSONObject.put(arrayName, jsonArray);
 
+        // Check if temp array has been already loaded.
+        // If not empty add current item.
+        ArrayList<SelectionItem> tempArray = checkTempArray(arrayName);
+        if(!tempArray.isEmpty()) {
+            updateSelectionRecyclerviewItems(tempArray, tempArray.size()+1, nameValue, itemWeight);
+        }
+
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
     }
@@ -354,6 +361,12 @@ public class DataManager {
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
+    }
+
+    public static void updateSelectionRecyclerviewItems(ArrayList<SelectionItem> tempArray,
+                                                        int id, String itemName, int itemWeight) {
+        SelectionItem selectionItem = new SelectionItem(id, itemName, itemWeight);
+        tempArray.add(selectionItem);
     }
 
     // Load JSON data for positive, negative, and feelings selection.
