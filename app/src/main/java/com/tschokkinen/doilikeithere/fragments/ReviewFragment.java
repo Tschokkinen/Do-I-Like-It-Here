@@ -44,8 +44,8 @@ public class ReviewFragment extends Fragment {
 
         //location_editText = (EditText) getView().findViewById(R.id.editTextLocation);
 
-        if (!DataManager.location.isEmpty()) {
-            binding.editTextLocation.setText(DataManager.location);
+        if (!DataManager.locationValue.isEmpty()) {
+            binding.editTextLocation.setText(DataManager.locationValue);
         } else {
             binding.editTextLocation.setText("");
         }
@@ -107,7 +107,7 @@ public class ReviewFragment extends Fragment {
     // Check if location has been entered in location_editText field.
     private void checkLocationEditText() {
         if (!binding.editTextLocation.getText().toString().isEmpty()) {
-            DataManager.location = binding.editTextLocation.getText().toString();
+            DataManager.locationValue = binding.editTextLocation.getText().toString();
         }
     }
 
