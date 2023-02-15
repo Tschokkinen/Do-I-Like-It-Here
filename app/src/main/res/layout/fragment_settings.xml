@@ -19,8 +19,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/removeItem"
-        android:text="Remove item"
+        android:id="@+id/manual"
+        android:text="Manual"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="Empty reviews database"
         android:id="@+id/emptyReviewsDatabase"
-        app:layout_constraintTop_toBottomOf="@id/removeItem"
+        app:layout_constraintTop_toBottomOf="@id/manual"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />

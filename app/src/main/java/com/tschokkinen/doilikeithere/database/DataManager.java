@@ -24,6 +24,7 @@ import java.lang.reflect.Array;
 import java.nio.channels.SelectionKey;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +45,14 @@ public class DataManager {
         DELETE_ONE
     }
 
+    public static final String positives = "Positives";
+    public static final String negatives = "Negatives";
+    public static final String feelings = "Feelings";
+    public static final String reviews = "Reviews";
+    public static final String location = "Location";
+    // Location concerning the review.
+    public static String locationValue = "";
+
     // Database filename.
     static final String FileName = "Database";
 
@@ -57,22 +66,6 @@ public class DataManager {
     public static ArrayList<SelectionItem> tempPositives = new ArrayList<>();
     public static ArrayList<SelectionItem> tempNegatives = new ArrayList<>();
     public static ArrayList<SelectionItem> tempFeelings = new ArrayList<>();
-
-    // Location concerning the review.
-    public static String location = "";
-
-    // Selected items from the recycler view.
-    public static ArrayList<SelectionItem> selected = new ArrayList<>();
-
-    // Used when calculating the review score.
-    private static final Map<String, ArrayList<SelectionItem>> tempArrays =
-            new HashMap<String, ArrayList<SelectionItem>>() {
-        {
-            put("Positives", tempPositives);
-            put("Negatives", tempNegatives);
-            put("Feelings", tempFeelings);
-        }
-    };
 
     // Clear selected temp array.
     public static void clearTemps(TempArrays tempName) {
@@ -96,24 +89,24 @@ public class DataManager {
         clearTemps(TempArrays.TEMP_POSITIVES);
         clearTemps(TempArrays.TEMP_NEGATIVES);
         clearTemps(TempArrays.TEMP_FEELINGS);
-        location = "";
+        locationValue = "";
     }
 
     public static ArrayList<SelectionItem> checkTempArray(String arrayName) {
         switch (arrayName) {
-            case "Positives":
+            case positives:
                 if (tempPositives.size() > 0) {
                     Log.d(TAG, "Positives");
                     return tempPositives;
                 }
                 break;
-            case "Negatives":
+            case negatives:
                 if (tempNegatives.size() > 0) {
                     Log.d(TAG, "Negatives returned");
                     return tempNegatives;
                 }
                 break;
-            case "Feelings":
+            case feelings:
                 if (tempFeelings.size() > 0) {
                     Log.d(TAG, "Feelings");
                     return tempFeelings;
@@ -129,7 +122,7 @@ public class DataManager {
     public static void initializeDatabase(Context context) throws JSONException, IOException {
         Log.d(TAG, "Initialize database");
 
-        String[] jsonArrayNames = {"Positives", "Negatives", "Feelings", "Reviews"};
+        String[] jsonArrayNames = {positives, negatives, feelings, reviews};
         JSONObject newDatabase = new JSONObject();
 
         // Initialize Positives, Negatives, Feelings, and Reviews arrays.
@@ -183,20 +176,19 @@ public class DataManager {
         if(command == DeleteCommands.DELETE_REVIEWS) { // Delete all reviews
             // Create an empty JSONArray
             JSONArray emptyJSONArray = new JSONArray();
-            loadedJSONObject.put("Reviews", emptyJSONArray);
+            loadedJSONObject.put(reviews, emptyJSONArray);
         } else if (command == DeleteCommands.DELETE_ENTIRE_DATABASE) { // Delete entire database
             // Create an empty JSONArray
             JSONArray emptyJSONArray = new JSONArray();
-            loadedJSONObject.put("Positives", emptyJSONArray);
-            loadedJSONObject.put("Negatives", emptyJSONArray);
-            loadedJSONObject.put("Feelings", emptyJSONArray);
-            loadedJSONObject.put("Reviews", emptyJSONArray);
+            loadedJSONObject.put(positives, emptyJSONArray);
+            loadedJSONObject.put(negatives, emptyJSONArray);
+            loadedJSONObject.put(feelings, emptyJSONArray);
+            loadedJSONObject.put(reviews, emptyJSONArray);
         } else if (command == DeleteCommands.DELETE_ONE) { // Delete one item or review
             JSONArray jsonArray = loadedJSONObject.getJSONArray(arrayName);
             jsonArray.remove(position);
             loadedJSONObject.put(arrayName, jsonArray);
         }
-
 
         // Write JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
@@ -248,56 +240,23 @@ public class DataManager {
     private static int calculateScore(Context context) throws JSONException, IOException {
         int totalScore = 0;
         Log.d(TAG, "Calculate score");
-        // Read file and convert to string.
-//        String response = readFile(context);
 
-        // Put response string to JSONObject and get array according to arrayName parameter.
-//        JSONObject jsonObject = new JSONObject(response);
+        ArrayList[] tempArrays = new ArrayList[]{
+                tempPositives,
+                tempNegatives,
+                tempFeelings
+        };
 
-        // Get current JsonArray name (Positives, Negatives, Feelings) and corresponding tempArrayList.
-        // Then get Weight of each temp item.
-        // Ignore multiple entries with same name by breaking loop after first one is found.
-//        for (Map.Entry<String, ArrayList<SelectionItem>> entry : tempArrays.entrySet()) {
-//            JSONArray jsonArray = jsonObject.getJSONArray(entry.getKey());
-//            for (SelectionItem s : entry.getValue()) {
-//                for (int i = 0; i < jsonArray.length(); i++) {
-//                    JSONObject current = jsonArray.getJSONObject(i);
-//                    //Log.d(TAG, current.getString("Name"));
-//                    if (current.getString("Name").equals(s.getName())) {
-//                        int value = current.getInt("Weight");
-//                        //Log.d(TAG, "Value of current Weight " + value);
-//                        totalScore += value;
-//                        break;
-//                    }
-//                }
-//            }
-//        } // Not the most elegant solution with tons of nesting, but works for now. :)
-
-        // REWORK THIS SECTION
-        for (SelectionItem s : tempPositives) {
-            if (s.getHasBeenSelected()) {
-                int value = s.getWeight();
-                Log.d(TAG, "Value of current Weight " + value);
-                totalScore += value;
+        for (ArrayList entry : tempArrays) {
+            for (Object o : entry) {
+                SelectionItem current = (SelectionItem) o;
+                if (current.getHasBeenSelected()) {
+                    int value = current.getWeight();
+                    Log.d(TAG, "Value of current Weight " + value);
+                    totalScore += value;
+                }
             }
         }
-
-        for (SelectionItem s : tempNegatives) {
-            if (s.getHasBeenSelected()) {
-                int value = s.getWeight();
-                Log.d(TAG, "Value of current Weight " + value);
-                totalScore += value;
-            }
-        }
-
-        for (SelectionItem s : tempFeelings) {
-            if (s.getHasBeenSelected()) {
-                int value = s.getWeight();
-                Log.d(TAG, "Value of current Weight " + value);
-                totalScore += value;
-            }
-        }
-        // END REWORK SECTION
 
         //Log.d(TAG, "Total score before return from calculateScore: " + totalScore);
         latestReviewScore = totalScore;
@@ -314,22 +273,32 @@ public class DataManager {
         StringBuilder negativesListString = new StringBuilder();
         StringBuilder feelingsListString = new StringBuilder();
 
-        // Convert tempArrays to Strings
-        for(SelectionItem s : tempPositives) {
-            if (s.getHasBeenSelected()) {
-                positivesListString.append(s.getName()).append(", ");
+        StringBuilder[] listStrings = new StringBuilder[]{
+                positivesListString,
+                negativesListString,
+                feelingsListString
+        };
+
+        ArrayList[] tempArrays = new ArrayList[]{
+                tempPositives,
+                tempNegatives,
+                tempFeelings
+        };
+
+        for (int i = 0; i < listStrings.length; i++) {
+            ArrayList<SelectionItem> currentTempArray = tempArrays[i];
+            Iterator<SelectionItem> it = currentTempArray.iterator();
+            while (it.hasNext()) {
+                SelectionItem s = it.next();
+                if (s.getHasBeenSelected()) {
+                    listStrings[i].append(s.getName());
+                    if (it.hasNext()) {
+                        listStrings[i].append(", ");
+                    }
+                }
             }
         }
-        for(SelectionItem s : tempNegatives) {
-            if (s.getHasBeenSelected()) {
-                negativesListString.append(s.getName()).append(", ");
-            }
-        }
-        for(SelectionItem s : tempFeelings) {
-            if (s.getHasBeenSelected()) {
-                feelingsListString.append(s.getName()).append(", ");
-            }
-        }
+
 
         // Put response string to JSONObject and get array according to arrayName parameter.
         JSONObject loadedJSONObject = new JSONObject(response);
@@ -346,10 +315,10 @@ public class DataManager {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("Location", location);
-            jsonObject.put("Positives", positivesListString.toString());
-            jsonObject.put("Negatives", negativesListString.toString());
-            jsonObject.put("Feelings", feelingsListString.toString());
+            jsonObject.put(location, locationValue);
+            jsonObject.put(positives, positivesListString.toString());
+            jsonObject.put(negatives, negativesListString.toString());
+            jsonObject.put(feelings, feelingsListString.toString());
             jsonObject.put("Total score", totalScore);
             jsonObject.put("Date", dateAsString);
         } catch (JSONException e) {
@@ -403,13 +372,13 @@ public class DataManager {
 
         // Assign requested values to a corresponding temp array.
         switch (arrayName) {
-            case "Positives":
+            case positives:
                 tempPositives = requestedValues;
                 return tempPositives;
-            case "Negatives":
+            case negatives:
                 tempNegatives = requestedValues;
                 return tempNegatives;
-            case "Feelings":
+            case feelings:
                 tempFeelings = requestedValues;
                 return tempFeelings;
         }
@@ -422,7 +391,7 @@ public class DataManager {
         String response = readFile(context);
 
         JSONObject jsonObject = new JSONObject(response);
-        JSONArray jsonArray = jsonObject.getJSONArray("Reviews");
+        JSONArray jsonArray = jsonObject.getJSONArray(reviews);
 
         // Array for requested values.
         ArrayList<ReviewItem> requestedValues = new ArrayList<>();
@@ -434,10 +403,10 @@ public class DataManager {
                 Date date = DateFormatters.sdfCompleteDate.parse(jsonTemp.getString("Date"));
                 //Log.d(TAG, "Parsed date: " + date);
                 ReviewItem reviewItem = new ReviewItem(
-                        jsonTemp.getString("Location"),
-                        jsonTemp.getString("Positives"),
-                        jsonTemp.getString("Negatives"),
-                        jsonTemp.getString("Feelings"),
+                        jsonTemp.getString(location),
+                        jsonTemp.getString(positives),
+                        jsonTemp.getString(negatives),
+                        jsonTemp.getString(feelings),
                         Integer.parseInt(jsonTemp.getString("Total score")),
                         date
                 );
