@@ -228,6 +228,7 @@ public class DataManager {
         // Check if temp array has been already loaded.
         // If not empty add current item.
         ArrayList<SelectionItem> tempArray = checkTempArray(arrayName);
+        assert tempArray != null;
         if(!tempArray.isEmpty()) {
             updateSelectionRecyclerviewItems(tempArray, tempArray.size()+1, nameValue, itemWeight);
         }
@@ -241,17 +242,16 @@ public class DataManager {
         int totalScore = 0;
         Log.d(TAG, "Calculate score");
 
-        ArrayList[] tempArrays = new ArrayList[]{
-                tempPositives,
-                tempNegatives,
-                tempFeelings
-        };
+        // Get all temp arrays.
+        ArrayList<ArrayList<SelectionItem>> tempArrays = new ArrayList<>();
+        tempArrays.add(tempPositives);
+        tempArrays.add(tempNegatives);
+        tempArrays.add(tempFeelings);
 
-        for (ArrayList entry : tempArrays) {
-            for (Object o : entry) {
-                SelectionItem current = (SelectionItem) o;
-                if (current.getHasBeenSelected()) {
-                    int value = current.getWeight();
+        for (ArrayList<SelectionItem> entry : tempArrays) {
+            for (SelectionItem s : entry) {
+                if (s.getHasBeenSelected()) {
+                    int value = s.getWeight();
                     Log.d(TAG, "Value of current Weight " + value);
                     totalScore += value;
                 }
@@ -273,28 +273,36 @@ public class DataManager {
         StringBuilder negativesListString = new StringBuilder();
         StringBuilder feelingsListString = new StringBuilder();
 
+        // Get listStrings to an array.
         StringBuilder[] listStrings = new StringBuilder[]{
                 positivesListString,
                 negativesListString,
                 feelingsListString
         };
 
-        ArrayList[] tempArrays = new ArrayList[]{
-                tempPositives,
-                tempNegatives,
-                tempFeelings
-        };
+        // Get all temp arrays.
+        ArrayList<ArrayList<SelectionItem>> tempArrays = new ArrayList<>();
+        tempArrays.add(tempPositives);
+        tempArrays.add(tempNegatives);
+        tempArrays.add(tempFeelings);
 
         for (int i = 0; i < listStrings.length; i++) {
-            ArrayList<SelectionItem> currentTempArray = tempArrays[i];
-            Iterator<SelectionItem> it = currentTempArray.iterator();
+            ArrayList<SelectionItem> currentTempArray = tempArrays.get(i); // Get current tempArray.
+            Iterator<SelectionItem> it = currentTempArray.iterator(); // Create iterator
+            ArrayList<SelectionItem> temp = new ArrayList<>(); // Create temp array for current.
             while (it.hasNext()) {
                 SelectionItem s = it.next();
                 if (s.getHasBeenSelected()) {
-                    listStrings[i].append(s.getName());
-                    if (it.hasNext()) {
-                        listStrings[i].append(", ");
-                    }
+                    temp.add(s); // Get selected items to temp array
+                }
+            }
+
+            it = temp.iterator();
+            while (it.hasNext()) {
+                SelectionItem s = it.next();
+                listStrings[i].append(s.getName()); // Get name(s) of selected item(s).
+                if (it.hasNext()) {
+                    listStrings[i].append(", "); // Append ',' if not last item in array.
                 }
             }
         }
