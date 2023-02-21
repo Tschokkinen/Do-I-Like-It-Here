@@ -36,4 +36,8 @@
     <string name="empty_review_database">Empty all reviews from database?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="manual">Manual</string>
+    <string name="delete_all_reviews">Delete all reviews</string>
+    <string name="empty_entire_database">Empty entire database</string>
+    <string name="copyright">Do I Like It Here\nGavril Tschokkinen\n2023\nV 0.0.1</string>
 </resources>

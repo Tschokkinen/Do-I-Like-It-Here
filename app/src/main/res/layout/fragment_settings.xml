@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Manual"
+        android:text="@string/manual"
         app:layout_constraintBottom_toTopOf="@+id/emptyReviewsDatabase"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete all reviews"
+        android:text="@string/delete_all_reviews"
         android:id="@+id/emptyReviewsDatabase"
         app:layout_constraintTop_toBottomOf="@id/manual"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Empty entire database"
+        android:text="@string/empty_entire_database"
         android:id="@+id/emptyEntireDatabase"
         app:layout_constraintTop_toBottomOf="@id/emptyReviewsDatabase"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Do I Like It Here\nGavril Tschokkinen\n2023\nV 0.0.1"
+        android:text="@string/copyright"
         android:layout_margin="5sp"
         android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
