@@ -1,6 +1,6 @@
 # Do-I-Like-It-Here
 
-Version: 0.0.0.0.0.1.
+Version: 0.1
 
 Platform: Android
 
