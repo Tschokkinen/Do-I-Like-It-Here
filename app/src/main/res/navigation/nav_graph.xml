@@ -89,7 +89,7 @@
     <fragment
         android:id="@+id/addNewItemFragment"
         android:name="com.tschokkinen.doilikeithere.AddNewItem"
-        android:label="AddNewItem" >
+        android:label="Add New Item">
         <action
             android:id="@+id/action_addNewItem_to_SelectionFragment"
             app:destination="@id/SelectionFragment" />

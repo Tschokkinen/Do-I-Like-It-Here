@@ -60,6 +60,7 @@ public class AddNewItem extends Fragment {
             public void onClick(View view) {
                 // Check if any of the fields are empty.
                 // Log.d(TAG, "Trying to save.");
+                Log.d(TAG, "ArrayName: " + arrayName);
                 if(binding.itemNameEditText.getText().toString().length() != 0 &&
                         binding.itemWeightEditText.getText().toString().length() != 0 &&
                         !arrayName.equals("")) {
