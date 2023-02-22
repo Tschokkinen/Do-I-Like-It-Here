@@ -92,29 +92,16 @@ public class DataManager {
         locationValue = "";
     }
 
-    public static ArrayList<SelectionItem> checkTempArray(String arrayName) {
+    public static ArrayList<SelectionItem> getTempArray(String arrayName) {
         switch (arrayName) {
             case positives:
-                if (tempPositives.size() > 0) {
-                    Log.d(TAG, "Positives");
-                    return tempPositives;
-                }
-                break;
+                return tempPositives;
             case negatives:
-                if (tempNegatives.size() > 0) {
-                    Log.d(TAG, "Negatives returned");
-                    return tempNegatives;
-                }
-                break;
+                return tempNegatives;
             case feelings:
-                if (tempFeelings.size() > 0) {
-                    Log.d(TAG, "Feelings");
-                    return tempFeelings;
-                }
-                break;
-            default:
-                break;
+                return tempFeelings;
         }
+        Log.d(TAG, "checkTempArray returned null");
         return null;
     }
 
@@ -225,16 +212,19 @@ public class DataManager {
         // Put updated jsonArray in loadedJSON object according to arrayName parameter.
         loadedJSONObject.put(arrayName, jsonArray);
 
-        // Check if temp array has been already loaded.
-        // If not empty add current item.
-        ArrayList<SelectionItem> tempArray = checkTempArray(arrayName);
-        assert tempArray != null;
-        if(!tempArray.isEmpty()) {
-            updateSelectionRecyclerviewItems(tempArray, tempArray.size()+1, nameValue, itemWeight);
-        }
+        // Get temp array and append new item on it.
+        ArrayList<SelectionItem> tempArray = getTempArray(arrayName);
+        updateSelectionRecyclerviewItems(tempArray, tempArray.size()+1, nameValue, itemWeight);
 
         // Write appended JSON object back into the file.
         writeFile(context, loadedJSONObject.toString());
+    }
+
+    // Update temp array.
+    public static void updateSelectionRecyclerviewItems(ArrayList<SelectionItem> tempArray,
+                                                        int id, String itemName, int itemWeight) {
+        SelectionItem selectionItem = new SelectionItem(id, itemName, itemWeight);
+        tempArray.add(selectionItem);
     }
 
     // Calculate place score by summing positives together and subtracting negatives from the total.
@@ -343,12 +333,6 @@ public class DataManager {
         writeFile(context, loadedJSONObject.toString());
     }
 
-    public static void updateSelectionRecyclerviewItems(ArrayList<SelectionItem> tempArray,
-                                                        int id, String itemName, int itemWeight) {
-        SelectionItem selectionItem = new SelectionItem(id, itemName, itemWeight);
-        tempArray.add(selectionItem);
-    }
-
     // Load JSON data for positive, negative, and feelings selection.
     public static ArrayList<SelectionItem> loadSelectionRecyclerviewItems(Context context, String arrayName)
             throws IOException, JSONException {
@@ -366,7 +350,7 @@ public class DataManager {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonTemp = jsonArray.getJSONObject(i);
-                Log.d(TAG, jsonTemp.getString("Name"));
+                //Log.d(TAG, jsonTemp.getString("Name"));
                 SelectionItem current = new SelectionItem(
                         i,
                         jsonTemp.getString("Name"),
@@ -382,14 +366,21 @@ public class DataManager {
         switch (arrayName) {
             case positives:
                 tempPositives = requestedValues;
+                Log.d(TAG, String.valueOf(tempPositives.size()));
+                Log.d(TAG, "Returned positives");
                 return tempPositives;
             case negatives:
                 tempNegatives = requestedValues;
+                Log.d(TAG, String.valueOf(tempNegatives.size()));
+                Log.d(TAG, "Returned negatives");
                 return tempNegatives;
             case feelings:
                 tempFeelings = requestedValues;
+                Log.d(TAG, String.valueOf(tempFeelings.size()));
+                Log.d(TAG, "Returned feelings");
                 return tempFeelings;
         }
+        Log.d(TAG, "Returning null");
         return null;
     }
 
