@@ -57,24 +57,22 @@ public class SelectionFragment extends Fragment {
 //        };
 //        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
-        // Get items for Recyclerview
-//        ArrayList<SelectionItem> previousTempArrayExists = DataManager.checkTempArray(arrayName);
-//        Log.d(TAG, "Previous temptarray: " + previousTempArrayExists.size());
-//        if (previousTempArrayExists.size() > 0) {
-//            recyclerViewItems = previousTempArrayExists;
-//            Log.d(TAG, "Not null");
-//        } else {
-//            try {
-//                getRecyclerViewData(arrayName);
-//            } catch (IOException | JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-        try {
-            getRecyclerViewData(arrayName);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
+        // Get items for Recyclerview.
+        // Check if item list has been previously generated.
+        // If previous item list (temp array matching the supplied arrayName) exists,
+        // use that instead of generating a new list.
+        ArrayList<SelectionItem> previousTempArray = DataManager.getTempArray(arrayName);
+        assert previousTempArray != null : "previousTempArray is null";
+        Log.d(TAG, "SelectionFragment: Previous tempArray: " + previousTempArray.size());
+        if (previousTempArray.size() > 0) {
+            Log.d(TAG, "Not empty");
+            recyclerViewItems = previousTempArray;
+        } else {
+            try {
+                getRecyclerViewData(arrayName);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

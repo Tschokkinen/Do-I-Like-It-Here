@@ -101,7 +101,7 @@ public class DataManager {
             case feelings:
                 return tempFeelings;
         }
-        Log.d(TAG, "checkTempArray returned null");
+        Log.d(TAG, "DataManager: checkTempArray returned null");
         return null;
     }
 
