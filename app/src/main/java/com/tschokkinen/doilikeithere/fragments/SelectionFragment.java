@@ -3,6 +3,7 @@ package com.tschokkinen.doilikeithere.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -43,9 +44,6 @@ public class SelectionFragment extends Fragment {
         arrayName = getArguments().getString("Selection");
         Log.d(TAG, "ArrayName " + arrayName);
 
-        // Set action bar title according to user selection.
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Select " + arrayName);
-
         // Device back button click.
         // Doesn't do anything at the moment.
 //        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -82,6 +80,9 @@ public class SelectionFragment extends Fragment {
         binding = FragmentSelectionBinding.inflate(inflater, container, false);
         binding.getRoot();
 
+        // Set action bar title according to user selection.
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Select " + arrayName);
+
         // Create new LinearLayoutManager for RecyclerView to mimic ListView layout.
         layoutManager = new LinearLayoutManager(getActivity());
 
@@ -109,6 +110,8 @@ public class SelectionFragment extends Fragment {
         binding.buttonNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("Selection", arrayName);
                 NavHostFragment.findNavController(SelectionFragment.this)
                         .navigate(R.id.action_SelectionFragment_to_addNewItem);
             }

@@ -67,7 +67,7 @@
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.tschokkinen.doilikeithere.fragments.HistoryFragment"
-        android:label="History"
+        android:label="Review History"
         tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_HistoryFragment_to_MainPageFragment"
