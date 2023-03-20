@@ -14,11 +14,20 @@ import com.tschokkinen.doilikeithere.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * A class that handles the base activity.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    /**
+     * Called when activity is created.
+     * Binds main to binding variable and creates NavController, appBarConfiguration,
+     * and sets the NavigationUI.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handles options menu selections.
+     *
+     * @param  item  The item that has been clicked.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
