@@ -11,6 +11,11 @@ import com.tschokkinen.doilikeithere.DateFormatters;
 import com.tschokkinen.doilikeithere.models.ReviewItem;
 import com.tschokkinen.doilikeithere.databinding.HistoryRowItemBinding;
 
+/**
+ * A class for history view ViewHolder.
+ * @author Gavril Tschokkinen
+ */
+
 public class HistoryViewHolder extends RecyclerView.ViewHolder {
     private final HistoryRowItemBinding binding;
 
@@ -18,11 +23,23 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
 
     private Fragment fragment;
 
+    /**
+     * HistoryViewHolder constructor.
+     *
+     * @param  binding  item for binding.
+     */
     public HistoryViewHolder(HistoryRowItemBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
     }
 
+    /**
+     * SelectionItem constructor.
+     *
+     * @param  reviewItem  Instantiated ReviewItem used to populate the view
+     *                     with included values.
+     * @param  resources  Value not in use currently
+     */
     public void setViewHolderData(ReviewItem reviewItem, Resources resources) {
         // Set location data.
         this.binding.location.setText(reviewItem.location);

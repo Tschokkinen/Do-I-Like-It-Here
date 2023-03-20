@@ -31,6 +31,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Class for data management.
+ * @author Gavril Tschokkinen
+ */
+
 public class DataManager {
 
     public enum TempArrays {
@@ -67,6 +72,11 @@ public class DataManager {
     public static ArrayList<SelectionItem> tempNegatives = new ArrayList<>();
     public static ArrayList<SelectionItem> tempFeelings = new ArrayList<>();
 
+    /**
+     * clearTemps method.
+     *
+     * @param  tempName  Name of the temporary array that needs to be cleared.
+     */
     // Clear selected temp array.
     public static void clearTemps(TempArrays tempName) {
         switch (tempName) {
@@ -92,6 +102,12 @@ public class DataManager {
         locationValue = "";
     }
 
+    /**
+     * getTempArray method.
+     *
+     * @param  arrayName  Name of the required temporary array.
+     * @return            Returns the temporary array corresponding to arrayName.
+     */
     public static ArrayList<SelectionItem> getTempArray(String arrayName) {
         switch (arrayName) {
             case positives:
@@ -105,6 +121,11 @@ public class DataManager {
         return null;
     }
 
+    /**
+     * initializeDatabase method.
+     *
+     * @param  context  Use context provided by the current fragment.
+     */
     // Initialize database with proper json arrays if file doesn't exist already.
     public static void initializeDatabase(Context context) throws JSONException, IOException {
         Log.d(TAG, "Initialize database");
@@ -120,6 +141,11 @@ public class DataManager {
         writeFile(context, newDatabase.toString());
     }
 
+    /**
+     * readFile method.
+     *
+     * @param  context  Use context provided by the current fragment.
+     */
     // Read file.
     private static String readFile(Context context) throws IOException, JSONException {
         File file = new File(context.getFilesDir(), FileName);
@@ -141,6 +167,11 @@ public class DataManager {
         return stringBuilder.toString();
     }
 
+    /**
+     * writeFile method.
+     *
+     * @param  context  Use context provided by the current fragment.
+     */
     // Write data to file.
     private static void writeFile(Context context, String userString) throws IOException {
         File file = new File(context.getFilesDir(), FileName);
@@ -151,6 +182,14 @@ public class DataManager {
         Log.d(TAG, "writeFile: userString " + userString);
     }
 
+    /**
+     * deleteFromDatabase method.
+     *
+     * @param  context  Use context provided by the current fragment.
+     * @param  command  Command to determine, which delete action should take place.
+     * @param  position Position of the item in the JSONArray.
+     * @param  arrayName Array name in the JSONArray.
+     */
     // Empty reviewsArray by replace existing array with an empty array.
     public static void deleteFromDatabase(Context context, DeleteCommands command, int position,
                                           String arrayName) throws JSONException, IOException {
@@ -181,6 +220,14 @@ public class DataManager {
         writeFile(context, loadedJSONObject.toString());
     }
 
+    /**
+     * addNewItem method.
+     *
+     * @param  context  Use context provided by the current fragment.
+     * @param  arrayName  Name of the required JSONArray.
+     * @param  nameValue Name of the item to be used in the JSONArray.
+     * @param  itemWeight Weight of the item to be used in the JSONArray.
+     */
     // Add new item to (positive, negative, or feeling) JSON file.
     // arrayName can be "positive", "negative", or "feelings".
     public static void addNewItem(Context context, String arrayName, String nameValue,
@@ -222,6 +269,16 @@ public class DataManager {
         writeFile(context, loadedJSONObject.toString());
     }
 
+    /**
+     * updateSelectionRecyclerviewItems method.
+     * Used to update the temp arrays used to populate RecyclerView if new items are inserted
+     * or deleted from the temp arrays.
+     *
+     * @param  tempArray  Use context provided by the current fragment.
+     * @param  id  ID used for ordering in RecyclerView.
+     * @param  itemName Name of the item.
+     * @param  itemWeight Weight of the item.
+     */
     // REWORK THIS SECTION ==>
     // Update temp array.
     public static void updateSelectionRecyclerviewItems(ArrayList<SelectionItem> tempArray,
@@ -232,6 +289,12 @@ public class DataManager {
     }
     // <== REWORK THIS SECTION
 
+    /**
+     * calculateScore method.
+     * Calculates review score based on the selected items in the recycler views.
+     *
+     * @param  context Not in use currently.
+     */
     // Calculate place score by summing positives together and subtracting negatives from the total.
     private static int calculateScore(Context context) throws JSONException, IOException {
         int totalScore = 0;
@@ -258,6 +321,13 @@ public class DataManager {
         return totalScore;
     }
 
+    /**
+     * addNewReview method.
+     * Adds new review to the database.
+     *
+     * @param  context  Use context provided by the current fragment.
+     * @param  arrayName  Name of the required JSONArray.
+     */
     // Add a new place review into the database.
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void addNewReview(Context context, String arrayName) throws IOException, JSONException {
@@ -282,6 +352,7 @@ public class DataManager {
         tempArrays.add(tempFeelings);
 
         for (int i = 0; i < listStrings.length; i++) {
+            // Get selected items from the temp arrays.
             ArrayList<SelectionItem> currentTempArray = tempArrays.get(i); // Get current tempArray.
             Iterator<SelectionItem> it = currentTempArray.iterator(); // Create iterator
             ArrayList<SelectionItem> temp = new ArrayList<>(); // Create temp array for current.
@@ -292,6 +363,7 @@ public class DataManager {
                 }
             }
 
+            // Concatenate selected items, and if item is not last in list, append ','.
             it = temp.iterator();
             while (it.hasNext()) {
                 SelectionItem s = it.next();
@@ -338,6 +410,15 @@ public class DataManager {
         writeFile(context, loadedJSONObject.toString());
     }
 
+    /**
+     * loadSelectionRecyclerViewItems method.
+     * Get items for different RecyclerViews (positives, negatives, and feelings).
+     *
+     * @param  context  Use context provided by the current fragment.
+     * @param  arrayName  Name of the required JSONArray.
+     * @return           Return an ArrayList consisting of requested items (positives, negatives,
+     *                   or feelings).
+     */
     // Load JSON data for positive, negative, and feelings selection.
     public static ArrayList<SelectionItem> loadSelectionRecyclerviewItems(Context context, String arrayName)
             throws IOException, JSONException {
@@ -389,6 +470,13 @@ public class DataManager {
         return null;
     }
 
+    /**
+     * loadReviewsRecyclerViewItems method.
+     * Get reviews for RecyclerView.
+     *
+     * @param  context  Use context provided by the current fragment.
+     * @return           Return an ArrayList consisting of review items.
+     */
     // Load reviews from JSON file.
     public static ArrayList<ReviewItem> loadReviewsRecyclerviewItems(Context context)
             throws JSONException, IOException, ParseException {
