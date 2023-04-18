@@ -1,5 +1,7 @@
 # Do-I-Like-It-Here
 
+<img src="https://user-images.githubusercontent.com/80984067/232871904-e74d1ddb-a5ee-4ed2-8b23-75b0add59ae0.png" width="150" height="317">
+
 Version: 0.1
 
 Platform: Android
@@ -9,6 +11,10 @@ IDE: Android Studio
 Other notes: Work still in progress. :) The project will be updated and improved during 2023.
 
 <a href="https://github.com/Tschokkinen/Do-I-Like-It-Here/tree/master/app/src/main/java/com/tschokkinen/doilikeithere">Go directly to Java folder</a> 
+
+------
+
+Try current build on appetize.io: https://appetize.io/embed/bdhm6l7vwsyc6dr2d6pq5xyxzm
 
 ------
 
